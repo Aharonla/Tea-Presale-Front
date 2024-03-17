@@ -1,0 +1,35 @@
+.top-bar {
+  color: $color-text;
+  padding-top: 16px;
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: 40px;
+    align-items: center;
+  }
+
+  &__logo {
+    height: 100%;
+    img {
+      height: 100%;
+    }
+  }
+
+  &__menu ul {
+    display: flex;
+    gap: 1em;
+
+    a {
+      font-size: 0.9em;
+    }
+
+    a.active {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      text-decoration-thickness: 0.1em;
+      text-decoration-color: $color-primary;
+      text-decoration-style: solid;
+    }
+  }
+}

@@ -1,0 +1,168 @@
+.buy {
+  display: grid;
+  width: 600px;
+  margin-inline: auto;
+  gap: 24px;
+
+  .card {
+    &::part(header) {
+      padding-top: 1em;
+      text-align: start;
+      border-bottom: none;
+    }
+
+    &:has(.card__inner)::part(header) {
+      padding-bottom: 0;
+    }
+
+    --gap: 8px;
+
+    &__inner:not(.noti) {
+      margin-bottom: var(--gap);
+    }
+
+    &__inner {
+      width: 100%;
+
+      &:has(.convert-icon) {
+        position: relative;
+
+        .convert-icon {
+          position: absolute;
+          top: calc(100% + var(--gap) / 2);
+          border: 0.15em solid white;
+          translate: 0 -50%;
+          left: 0;
+          right: 0;
+          margin: auto;
+          font-size: 1.5rem;
+          background-color: white;
+          color: $color-primary;
+        }
+      }
+
+      &::part(body) {
+        display: grid;
+        grid-template-columns: min-content auto;
+        gap: 30px;
+        align-items: center;
+      }
+    }
+
+    .select-coin {
+      text-align: start;
+
+      &::part(combobox) {
+        font-size: 1rem;
+        min-width: 180px;
+        padding-left: 1.7em;
+      }
+
+      &[disabled] {
+        &::part(combobox) {
+          min-width: 150px;
+          opacity: 1;
+          cursor: default;
+          background-color: var(--sl-input-background-color);
+        }
+
+        &::part(expand-icon) {
+
+          display: none;
+        }
+      }
+
+      &::part(prefix),
+      ::part(prefix) {
+        min-width: 2em;
+        width: 2em;
+        height: 2em;
+        margin-right: 0.75em;
+      }
+
+      .coin-icon {
+        width: 100%;
+        height: 100%;
+      }
+
+      &::part(display-input) {
+        font-weight: 700;
+      }
+
+      sl-option {
+        --sl-color-primary-600: #{var(--sl-color-gray-50)};
+        --sl-color-neutral-0: #{var(--sl-color-gray-700)};
+
+        &:hover {
+          --sl-color-neutral-0: #{var(--sl-color-gray-800)};
+        }
+
+        &::part(base) {
+          transition: all 0.3s;
+          font-weight: 700;
+        }
+
+        &::part(checked-icon) {
+          color: $color-primary;
+          width: 1.2em;
+          height: 1.2em;
+          padding-right: 0;
+        }
+
+        &::part(label) {
+          font-weight: 700;
+        }
+      }
+    }
+
+
+    .amount {
+      display: grid;
+      gap: 4px;
+      text-align: end;
+      --sl-input-spacing-medium: 0;
+
+      &__input {
+        --sl-input-placeholder-color: #{var(--sl-input-color)};
+
+        &::part(input) {
+          text-align: end;
+        }
+
+        &::part(base) {
+          font-size: 1.5rem;
+          font-weight: 700;
+          border: none;
+          width: 100%;
+          box-shadow: none;
+        }
+      }
+
+      &__after {
+        color: $color-text-secondary;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      &__balance {
+        font-size: 0.75rem;
+        height: 1.2em;
+      }
+    }
+  }
+  .buy__btn {
+    &::part(base) {
+      transition: all 100ms ease-in-out 25ms;
+    }
+    &[disabled] {
+      &::part(base) {
+        opacity: 0.5;
+        border-color: $color-disabled;
+        background-color: $color-disabled;
+      }
+      &::part(label) {
+        color: $color-text-secondary;
+      }
+    }
+  }
+}
