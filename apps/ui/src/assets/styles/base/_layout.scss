@@ -2,8 +2,10 @@
   --min-width: 400px;
   --width: 1200px;
   --gutter: minmax(24px, 1fr);
-  display: grid;
-  grid-template-columns: var(--gutter) minmax(var(--min-width), var(--width)) var(--gutter);
+  // display: grid;
+  grid-template-columns: var(--gutter) minmax(var(--min-width), var(--width)) var(
+      --gutter
+    );
   grid-template-rows: min-content auto;
   min-height: 100dvh;
 

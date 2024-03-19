@@ -1,21 +1,39 @@
 .top-bar {
   color: $color-text;
   padding-top: 16px;
+  background-color: $navback;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
+  justify-content: center;
+  align-items: center;
 
   .container {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-rows: 40px;
+    justify-content: center;
     align-items: center;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: 50px;
+    .logo-container {
+      display: flex;
+      // flex-wrap: wrap;
+      // justify-content: center;
+      align-items: center;
+    }
   }
 
   &__logo {
     height: 100%;
+    margin-right: 10px;
     img {
-      height: 100%;
+      border-radius: 50%;
+      height: 50px;
     }
   }
-
+  &__title {
+    font-weight: bold;
+  }
   &__menu ul {
     display: flex;
     gap: 1em;
