@@ -9,10 +9,10 @@ export const TopBar = () => {
       <div className="container">
         <div className="logo-container">
           <div className="top-bar__logo">
-            <img src={teaLogo} alt="Noti" />
+            <img src={teaLogo} alt="TeaToken" />
           </div>
           <p>
-            <strong>Tea</strong> Swap
+            <strong>Tea</strong> Presale
           </p>
         </div>
         <nav className="top-bar__menu">

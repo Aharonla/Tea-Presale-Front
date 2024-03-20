@@ -7,10 +7,10 @@
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
     "@nestjs/typeorm": "^10.0.2",
-    "@shoelace-style/shoelace": "^2.14.0",
+    "@rainbow-me/rainbowkit": "^2.0.2",
+    "@tanstack/react-query": "^5.28.4",
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
-    "ethers": "^6.11.1",
     "mysql2": "^3.9.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -19,6 +19,8 @@
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.20",
+    "viem": "^2.8.14",
+    "wagmi": "^2.5.11",
     "zod": "^3.22.4",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
@@ -113,147 +115,71 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".nx/cache/vite.hash",
-        "hash": "1870418166975728691"
-      },
-      {
-        "file": ".git/hooks/push-to-checkout.sample",
-        "hash": "5194610557431485830"
-      },
-      {
-        "file": ".nx/cache/d/daemon.log",
-        "hash": "5469657218527155354"
-      },
-      {
-        "file": "nx.json",
-        "hash": "1970918215056678906"
+        "file": ".env.local",
+        "hash": "5641520630059527378"
       },
       {
         "file": "package.json",
-        "hash": "13834444020442862129"
-      },
-      {
-        "file": ".nx/cache/cypress.hash",
-        "hash": "15753941481085060538"
-      },
-      {
-        "file": ".nx/cache/nx_files.nxt",
-        "hash": "6564759022856853120"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "9492830933669594964"
-      },
-      {
-        "file": ".git/config",
-        "hash": "4282570799856159735"
-      },
-      {
-        "file": ".git/hooks/fsmonitor-watchman.sample",
-        "hash": "5775573213843170127"
-      },
-      {
-        "file": ".git/hooks/pre-commit.sample",
-        "hash": "10258126878297473471"
-      },
-      {
-        "file": ".nx/cache/file-map.json",
-        "hash": "2255537636256399458"
-      },
-      {
-        "file": "__MACOSX/apps/ui/src/assets/fonts/Inter/._OFL.txt",
-        "hash": "12125269041071221378"
-      },
-      {
-        "file": ".git/hooks/pre-receive.sample",
-        "hash": "8999430056057037490"
+        "hash": "6321066188486032264"
       },
       {
         "file": "jest.preset.js",
-        "hash": "9430166341120122740"
+        "hash": "7473220183190921152"
       },
       {
-        "file": "jest.config.ts",
-        "hash": "12333515226966617182"
-      },
-      {
-        "file": ".git/hooks/pre-rebase.sample",
-        "hash": "15784748353859782246"
-      },
-      {
-        "file": ".git/hooks/post-update.sample",
-        "hash": "16498975149454253769"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "1186397033497114467"
+        "file": ".env.production",
+        "hash": "5641520630059527378"
       },
       {
         "file": "README.md",
-        "hash": "12016062751121430647"
+        "hash": "5057489353185349668"
       },
       {
-        "file": ".git/hooks/commit-msg.sample",
-        "hash": "11930680668000581900"
+        "file": "package-lock.json",
+        "hash": "6817089300345218123"
       },
       {
-        "file": ".nx/cache/jest.hash",
-        "hash": "15753941481085060538"
+        "file": "nx.json",
+        "hash": "1054151259499075504"
       },
       {
         "file": "tsconfig.base.json",
-        "hash": "16936441711144470533"
+        "hash": "12471885200579325840"
       },
       {
-        "file": ".git/hooks/pre-applypatch.sample",
-        "hash": "1595391782482835178"
+        "file": ".env",
+        "hash": "5641520630059527378"
       },
       {
-        "file": ".nx/cache/project-graph.json",
-        "hash": "4693188884614963125"
+        "file": "docker-compose.yml",
+        "hash": "9799608229351829448"
       },
       {
-        "file": ".git/HEAD",
-        "hash": "11710400652189793685"
+        "file": ".gitignore",
+        "hash": "13404745306227114823"
       },
       {
-        "file": ".git/hooks/pre-merge-commit.sample",
-        "hash": "5691533144974613569"
-      },
-      {
-        "file": ".git/info/exclude",
-        "hash": "2084763735014985388"
-      },
-      {
-        "file": "__MACOSX/apps/ui/src/assets/fonts/Inter/._README.txt",
-        "hash": "8135502347170882727"
-      },
-      {
-        "file": ".git/hooks/prepare-commit-msg.sample",
-        "hash": "4009645067798984574"
-      },
-      {
-        "file": ".git/description",
-        "hash": "6589616779641096119"
+        "file": "jest.config.ts",
+        "hash": "3407785570333453138"
       }
     ],
     "projectFileMap": {
       "ui": [
         {
           "file": "apps/ui/.env.development",
-          "hash": "11224093015390654992"
+          "hash": "18219906330224423722"
         },
         {
           "file": "apps/ui/.eslintrc.json",
-          "hash": "11012487992710232822"
+          "hash": "14830867113928387670"
         },
         {
           "file": "apps/ui/index.html",
-          "hash": "17573655988902391840"
+          "hash": "2451878383743521481"
         },
         {
           "file": "apps/ui/project.json",
-          "hash": "12663168557846791994"
+          "hash": "15286692394922686224"
         },
         {
           "file": "apps/ui/public/favicon.ico",
@@ -261,68 +187,68 @@
         },
         {
           "file": "apps/ui/src/app/app.spec.tsx",
-          "hash": "15402097003697458740",
+          "hash": "16192953459560021902",
           "deps": [
             "npm:@testing-library/react"
           ]
         },
         {
           "file": "apps/ui/src/app/app.tsx",
-          "hash": "6387218470244390059",
+          "hash": "7138908463110229198",
           "deps": [
             "npm:react-router-dom"
           ]
         },
         {
-          "file": "apps/ui/src/app/components/coin-input.tsx",
-          "hash": "10525079121731910428",
+          "file": "apps/ui/src/app/components/coin-section.tsx",
+          "hash": "3881607782944128721",
           "deps": [
             "npm:react",
-            "npm:@shoelace-style/shoelace"
-          ]
-        },
-        {
-          "file": "apps/ui/src/app/components/connect-metamask.tsx",
-          "hash": "15810888925612943641",
-          "deps": [
-            "npm:react",
-            "npm:@shoelace-style/shoelace"
-          ]
-        },
-        {
-          "file": "apps/ui/src/app/components/connect-wallet.tsx",
-          "hash": "7099500518248388538",
-          "deps": [
-            "npm:react",
-            "npm:@shoelace-style/shoelace"
+            "npm:wagmi",
+            "npm:viem"
           ]
         },
         {
           "file": "apps/ui/src/app/components/countdown.tsx",
-          "hash": "15467903055464370393",
+          "hash": "11256567026992527906",
           "deps": [
-            "npm:react",
-            "npm:@shoelace-style/shoelace"
+            "npm:react"
           ]
         },
         {
           "file": "apps/ui/src/app/components/layout.tsx",
-          "hash": "9948532110614334735",
+          "hash": "2600617268959629064",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
           ]
         },
         {
+          "file": "apps/ui/src/app/components/popup-dialog.tsx",
+          "hash": "964621620893756150"
+        },
+        {
           "file": "apps/ui/src/app/components/token-rate.tsx",
-          "hash": "10712627034090904966",
-          "deps": [
-            "npm:@shoelace-style/shoelace"
-          ]
+          "hash": "13095437384373559612"
         },
         {
           "file": "apps/ui/src/app/components/top-bar.tsx",
-          "hash": "16895274432627688790",
+          "hash": "13042932812531503078",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "apps/ui/src/app/components/vertical-line.tsx",
+          "hash": "13619756046629796078",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/ui/src/app/components/wallet-connect.tsx",
+          "hash": "12621378086567016803",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -330,82 +256,70 @@
         },
         {
           "file": "apps/ui/src/app/components/wallet.tsx",
-          "hash": "11516165295501075826",
+          "hash": "6606845128701630233",
           "deps": [
-            "npm:react",
-            "npm:@shoelace-style/shoelace"
-          ]
-        },
-        {
-          "file": "apps/ui/src/app/context/metamask.context.tsx",
-          "hash": "10362386173026784355",
-          "deps": [
-            "npm:react",
-            "npm:@metamask/sdk",
-            "npm:ethers"
+            "npm:@rainbow-me/rainbowkit"
           ]
         },
         {
           "file": "apps/ui/src/app/context/user.context.tsx",
-          "hash": "5190341955701670246",
+          "hash": "10712452970170089945",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/ui/src/app/hooks/useCoin.tsx",
-          "hash": "10249305002301649246",
+          "hash": "10177894401540256862",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/ui/src/app/pages/buy.tsx",
-          "hash": "12557394605438627365",
+          "hash": "10803006066788617996",
           "deps": [
             "npm:react",
-            "npm:@shoelace-style/shoelace"
+            "npm:wagmi"
           ]
         },
         {
           "file": "apps/ui/src/app/pages/claim.tsx",
-          "hash": "15974064213562065227",
+          "hash": "14616458142321066259",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/ui/src/app/pages/login.tsx",
-          "hash": "3025758904948932156",
+          "hash": "17641235632511247637",
           "deps": [
             "npm:react",
-            "npm:@shoelace-style/shoelace",
             "npm:react-router-dom"
           ]
         },
         {
           "file": "apps/ui/src/app/pages/not-found.tsx",
-          "hash": "5021346612340407124",
+          "hash": "13167071464816492870",
           "deps": [
             "npm:react",
-            "npm:react-router-dom",
-            "npm:@shoelace-style/shoelace"
+            "npm:react-router-dom"
           ]
         },
         {
           "file": "apps/ui/src/app/utils/constants.ts",
-          "hash": "8059381870838243592"
+          "hash": "14656108521276004553"
         },
         {
           "file": "apps/ui/src/app/utils/env.ts",
-          "hash": "17600083970334906141",
+          "hash": "12367107106450169898",
           "deps": [
             "npm:zod"
           ]
         },
         {
           "file": "apps/ui/src/app/utils/erc20_abi.ts",
-          "hash": "7056442938706962883"
+          "hash": "5598743268541520404"
         },
         {
           "file": "apps/ui/src/assets/.gitkeep",
@@ -413,7 +327,7 @@
         },
         {
           "file": "apps/ui/src/assets/constants/routes.ts",
-          "hash": "3758742825659221826"
+          "hash": "3646185295012622855"
         },
         {
           "file": "apps/ui/src/assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf",
@@ -425,7 +339,7 @@
         },
         {
           "file": "apps/ui/src/assets/fonts/Inter/README.txt",
-          "hash": "11162313929925286324"
+          "hash": "16184258975810726701"
         },
         {
           "file": "apps/ui/src/assets/fonts/Inter/static/Inter-Black.ttf",
@@ -464,116 +378,146 @@
           "hash": "10653490544658324834"
         },
         {
+          "file": "apps/ui/src/assets/icons/Artboard 20.svg",
+          "hash": "8852270283677499148"
+        },
+        {
+          "file": "apps/ui/src/assets/icons/TeaSwap.svg",
+          "hash": "15977498874210074579"
+        },
+        {
           "file": "apps/ui/src/assets/icons/ethereum.svg",
-          "hash": "7529745543169028029"
+          "hash": "5458528636287336886"
         },
         {
           "file": "apps/ui/src/assets/icons/metamask-fox.svg",
-          "hash": "8148279760998350659"
+          "hash": "3456387762235673779"
         },
         {
           "file": "apps/ui/src/assets/icons/noti-logo.svg",
-          "hash": "5424595369634844459"
+          "hash": "5384758584846662710"
         },
         {
           "file": "apps/ui/src/assets/icons/noti-token.svg",
-          "hash": "5923812603200054972"
+          "hash": "11189724451072629407"
+        },
+        {
+          "file": "apps/ui/src/assets/icons/swap.png",
+          "hash": "7989813999372821502"
+        },
+        {
+          "file": "apps/ui/src/assets/icons/tea-logo.svg",
+          "hash": "10942212938842911331"
+        },
+        {
+          "file": "apps/ui/src/assets/icons/tea-token.svg",
+          "hash": "13859617084640148818"
         },
         {
           "file": "apps/ui/src/assets/icons/tether.svg",
-          "hash": "13729575888114719688"
+          "hash": "5040254863048904616"
         },
         {
           "file": "apps/ui/src/assets/icons/walletconnect.svg",
-          "hash": "14889453139094309435"
+          "hash": "2679707860655671065"
         },
         {
           "file": "apps/ui/src/assets/styles/base/_base.scss",
-          "hash": "4906370824668659950"
+          "hash": "5548501027904779137"
         },
         {
           "file": "apps/ui/src/assets/styles/base/_helpers.scss",
-          "hash": "9649560515533452057"
+          "hash": "12844209898456747003"
         },
         {
           "file": "apps/ui/src/assets/styles/base/_layout.scss",
-          "hash": "16504293976333456164"
+          "hash": "10220529247444144605"
         },
         {
           "file": "apps/ui/src/assets/styles/base/_reset.scss",
-          "hash": "2293523555058508860"
+          "hash": "15237415991712479851"
         },
         {
           "file": "apps/ui/src/assets/styles/components/_connect-wallet.scss",
-          "hash": "3091210842759543973"
+          "hash": "8054509522451210180"
         },
         {
           "file": "apps/ui/src/assets/styles/components/_countdown.scss",
-          "hash": "7718073845094512565"
+          "hash": "17996148359941511552"
+        },
+        {
+          "file": "apps/ui/src/assets/styles/components/_popup-dialog.scss",
+          "hash": "5453996035882610918"
         },
         {
           "file": "apps/ui/src/assets/styles/components/_token-rate.scss",
-          "hash": "13886842790471668029"
+          "hash": "699892247704157139"
         },
         {
           "file": "apps/ui/src/assets/styles/components/_top-bar.scss",
-          "hash": "75071099258830859"
+          "hash": "10142446636131578307"
         },
         {
           "file": "apps/ui/src/assets/styles/components/_wallet.scss",
-          "hash": "468294739425489758"
+          "hash": "11257451395008386223"
         },
         {
           "file": "apps/ui/src/assets/styles/main.scss",
-          "hash": "17160613131960190287"
+          "hash": "3147060930030620241"
         },
         {
           "file": "apps/ui/src/assets/styles/pages/_buy.scss",
-          "hash": "14285948394781901506"
+          "hash": "13818762219195481464"
         },
         {
           "file": "apps/ui/src/assets/styles/pages/_claim.scss",
-          "hash": "11042088815744437496"
+          "hash": "8648623130340248567"
         },
         {
           "file": "apps/ui/src/assets/styles/pages/_login.scss",
-          "hash": "8630409398355855446"
+          "hash": "1753095991169211495"
         },
         {
           "file": "apps/ui/src/assets/styles/pages/_not-found.scss",
-          "hash": "1980686080436014453"
+          "hash": "3897420822697380022"
         },
         {
           "file": "apps/ui/src/assets/styles/setup/_typography.scss",
-          "hash": "4242283026642106626"
+          "hash": "8717242788507752048"
         },
         {
           "file": "apps/ui/src/assets/styles/setup/_variables.scss",
-          "hash": "11051065465448280847"
+          "hash": "9711501117379514175"
+        },
+        {
+          "file": "apps/ui/src/assets/styles/setup/media-queries.scss",
+          "hash": "11481742409352945413"
         },
         {
           "file": "apps/ui/src/main.tsx",
-          "hash": "12655627655872449717",
+          "hash": "15464563283740279149",
           "deps": [
             "npm:react-dom",
-            "npm:@shoelace-style/shoelace"
+            "npm:@rainbow-me/rainbowkit",
+            "npm:wagmi",
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/ui/tsconfig.app.json",
-          "hash": "7232119452847825095"
+          "hash": "9014817974750934731"
         },
         {
           "file": "apps/ui/tsconfig.json",
-          "hash": "11166545116916107487"
+          "hash": "8792423286157740794"
         },
         {
           "file": "apps/ui/tsconfig.spec.json",
-          "hash": "9472099605191632308"
+          "hash": "2338756782167906093"
         },
         {
           "file": "apps/ui/vite.config.ts",
-          "hash": "9520537209292559206",
+          "hash": "1204071572935476013",
           "deps": [
             "npm:vite",
             "npm:@vitejs/plugin-react",

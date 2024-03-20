@@ -37,17 +37,17 @@
   &__menu ul {
     display: flex;
     gap: 1em;
+    text-decoration: none;
 
     a {
-      font-size: 0.9em;
+      font-size: 1.2rem;
+      color: $color-text-secondary;
     }
 
     a.active {
-      text-decoration: underline;
+      text-decoration: none;
       text-underline-offset: 0.2em;
-      text-decoration-thickness: 0.1em;
-      text-decoration-color: $color-primary;
-      text-decoration-style: solid;
+      color: $color-text;
     }
   }
 }

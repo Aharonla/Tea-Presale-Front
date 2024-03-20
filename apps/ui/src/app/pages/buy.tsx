@@ -5,25 +5,16 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  SlCard,
-  SlSelect,
-  SlOption,
-  SlIcon,
-  SlButton,
-  SlInput,
-} from "@shoelace-style/shoelace/dist/react";
-import { useMetaMaskContext } from "../context/metamask.context";
+
 import tetherIcon from "../../assets/icons/tether.svg";
 import ethereumIcon from "../../assets/icons/ethereum.svg";
-import { CoinInput } from "../components/coin-input";
 import { useCoin } from "../hooks/useCoin";
 import { TokenRate } from "../components/token-rate";
 import teaToken from "../../assets/icons/tea-token.svg";
 import { Countdown } from "../components/countdown";
 import swapArrow from "../../assets/icons/swap.png";
-import { VerticalLine } from "../components/swap";
-import { InputHeader, SwapCardFooter } from "../components/buy-page";
+import { useAccount, useBalance } from "wagmi";
+import { CoinSection } from "../components/coin-section";
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: "ETH", value: "eth" },
@@ -31,36 +22,27 @@ const mappedCoins = {
 };
 export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ["eth", "usdt"];
+
 export const Buy = () => {
-  const lastInputTouched = useRef<"noti" | "coin" | null>(null);
-  const [selectedCoin, setSelectedCoin] = useState<CoinType>("eth");
+  const lastInputTouched = useRef<"tea" | "coin" | null>(null);
+
+  const [selectedCoin, setSelectedCoin] = useState<CoinType>("usdt");
   const [amount, setAmount] = useState<number>();
-  const [amountInNoti, setAmountInNoti] = useState<number>();
-  const { balance } = useMetaMaskContext();
+  const [amointInTea, setmountInTea] = useState<number>();
+  const { address, chainId, isConnected } = useAccount();
   const { convertCoin, coinValuation } = useCoin();
 
   const updateValueOfLastTouchedInput = useCallback(() => {
-    if (lastInputTouched.current === "noti") {
-      setAmount(() => convertCoin(amountInNoti, false, selectedCoin));
+    if (lastInputTouched.current === "tea") {
+      setAmount(() => convertCoin(amointInTea, false, selectedCoin));
     } else if (lastInputTouched.current === "coin") {
-      setAmountInNoti(() => convertCoin(amount, true, selectedCoin));
+      setmountInTea(() => convertCoin(amount, true, selectedCoin));
     }
-  }, [amount, amountInNoti, convertCoin, selectedCoin]);
+  }, [amount, amointInTea, convertCoin, selectedCoin]);
 
-  const formattedBalance = useMemo(() => {
-    if (balance[selectedCoin] === null) {
-      return "";
-    }
-    return `Balance: ${balance[selectedCoin]} ${mappedCoins[selectedCoin]?.label}`;
-  }, [balance, selectedCoin]);
-
-  const buyButtonDisabled = useMemo(() => {
-    return (
-      !amount ||
-      balance[selectedCoin] === null ||
-      coinValuation[selectedCoin] === null
-    );
-  }, [amount, balance, coinValuation, selectedCoin]);
+  const swapButtonDisabled = useMemo(() => {
+    return !amount || coinValuation[selectedCoin] === null, !isConnected;
+  }, [amount, coinValuation, selectedCoin]);
 
   useEffect(() => {
     updateValueOfLastTouchedInput();
@@ -70,52 +52,37 @@ export const Buy = () => {
     <div className="buy page">
       <div className="swap">
         <div className="swap__body">
-          <InputHeader />
+          <TokenRate />
           <div className="coin-center">
-            <div className="coin-section">
-              <img
-                src={ethereumIcon}
-                alt="ETH"
-                slot="prefix"
-                className="coin-center__icon"
-              />
-              ETH
-              <VerticalLine />
-              <CoinInput
-                valueAsNumber={amountInNoti}
-                decimals={9}
-                onChangeValue={(value) => {
-                  lastInputTouched.current = "noti";
-                  setAmount(convertCoin(value, false, selectedCoin));
-                  setAmountInNoti(value);
-                }}
-              />
-            </div>
+            <CoinSection
+              symbol={"USDT"}
+              logo={tetherIcon}
+              valueAsNumber={amount}
+              isPayment
+              decimals={18}
+              onChangeValue={(value) => {
+                lastInputTouched.current = "coin";
+                setAmount(value);
+                setmountInTea(convertCoin(value, true, selectedCoin));
+              }}
+            />
             <img src={swapArrow} alt="swap-arrow" className="convert-icon" />
-
-            <div className="coin-section">
-              <img
-                src={teaToken}
-                alt="TEA"
-                slot="prefix"
-                className="coin-center__icon"
-              />
-              TEA
-              <VerticalLine />
-              <CoinInput
-                valueAsNumber={amountInNoti}
-                decimals={9}
-                onChangeValue={(value) => {
-                  lastInputTouched.current = "noti";
-                  setAmount(convertCoin(value, false, selectedCoin));
-                  setAmountInNoti(value);
-                }}
-              />
-            </div>
+            <CoinSection
+              symbol={"TEA"}
+              logo={teaToken}
+              valueAsNumber={amointInTea}
+              decimals={9}
+              onChangeValue={(value) => {
+                lastInputTouched.current = "tea";
+                setAmount(convertCoin(value, false, selectedCoin));
+                setmountInTea(value);
+              }}
+            />
           </div>
         </div>
-        <SwapCardFooter />
-        <button className="swap-button">SWAP</button>
+        <button disabled={swapButtonDisabled} className="swap-button">
+          SWAP
+        </button>
       </div>
     </div>
   );

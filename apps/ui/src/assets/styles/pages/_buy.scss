@@ -11,11 +11,25 @@
 
     &__body {
       margin-top: 50px;
+      margin-bottom: 50px;
       padding-inline: 40px;
-      // display: flex;
       min-height: initial;
       align-items: center;
-      // justify-content: center;
+      .token-rate {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+        &__token {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+        &__logo {
+          margin-right: 10px;
+          width: 50px;
+          height: 50px;
+        }
+      }
       .vertical-line {
         width: 1px;
         height: 20px;
@@ -29,42 +43,40 @@
         @include gt-sm {
           transform: rotate(90deg);
           margin-inline: 1%;
-          width: 40px;
-          height: 40px;
         }
       }
-      .coin-header {
-        height: 0px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        @include lt-md {
-          opacity: 0;
-        }
-        &__row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-inline: 10px;
-          padding-block: 5px;
-          border-radius: 10px;
-          width: 45%;
-          // background-color: #2e3136;
-        }
-        &__label {
-          font-size: 0.6rem;
-          color: #aaa;
-        }
-      }
+
       .coin-center {
         display: flex;
         @include lt-md {
           display: block;
         }
+
         justify-content: space-between;
         align-items: center;
         width: 100%;
+      }
+
+      .coin-section {
+        width: 100%;
+
+        &__header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-inline: 20px;
+          height: 0px;
+        }
+
+        &__input {
+          display: flex;
+          align-items: center;
+          padding-inline: 10px;
+          padding-block: 10px;
+          border-radius: 10px;
+          background-color: #2e3136;
+        }
+
         &__icon {
           width: 25px;
           height: 25px;
@@ -76,84 +88,43 @@
           font-size: 0.6rem;
           color: #aaa;
         }
-      }
-
-      .coin-section {
-        display: flex;
-        align-items: center;
-        padding-inline: 10px;
-        padding-block: 10px;
-        border-radius: 10px;
-        width: 100%;
-        background-color: #2e3136;
-      }
-      .amount {
-        // display: grid;
-        // gap: 4px;
-        text-align: end;
-        align-items: flex-end;
-        --sl-input-spacing-medium: 0;
-        &__input {
-          flex: 1;
-          --sl-input-placeholder-color: #{var(--sl-input-color)};
-
-          &::part(input) {
-            text-align: end;
-            align-self: flex-end;
-            width: 100%;
-            color: white;
-          }
-
-          &::part(base) {
-            background-color: #2e3136;
-
-            font-size: 1.5rem;
-            font-weight: 700;
-            border: none;
-            width: 100%;
-            // box-shadow: none;
-          }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        /* Firefox */
+        input[type="number"] {
+          appearance: none;
+          -moz-appearance: textfield;
         }
 
-        &__after {
-          color: $color-text-secondary;
+        .txtinput {
+          background-color: #2e3136;
           font-size: 1.5rem;
           font-weight: 700;
-        }
-
-        &__balance {
-          font-size: 0.75rem;
-          height: 1.2em;
-        }
-      }
-    }
-    .swap-footer {
-      padding-inline: 40px;
-      margin-block: 40px;
-      &__row {
-        min-height: initial;
-        flex: 0;
-        min-height: 0px;
-        height: 13px;
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-
-        &__label {
-          font-size: 0.6rem;
-          color: #aaa;
+          border: none;
+          width: 100%;
+          text-align: end;
+          align-self: flex-end;
+          width: 100%;
+          color: white;
+          outline: none;
         }
       }
     }
 
     .swap-button {
       width: 100%;
-      background-color: #f716a2;
+      background-color: $color-brand;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
       color: white;
       padding-top: 10px;
       padding-bottom: 10px;
+      &[disabled] {
+        background-color: darken($color-brand, 20%);
+      }
     }
   }
 }
