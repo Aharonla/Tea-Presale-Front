@@ -115,60 +115,44 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".env.local",
-        "hash": "5641520630059527378"
-      },
-      {
         "file": "package.json",
         "hash": "6321066188486032264"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "7473220183190921152"
-      },
-      {
-        "file": ".env.production",
-        "hash": "5641520630059527378"
-      },
-      {
-        "file": "README.md",
-        "hash": "5057489353185349668"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "6817089300345218123"
       },
       {
         "file": "nx.json",
         "hash": "1054151259499075504"
       },
       {
-        "file": "tsconfig.base.json",
-        "hash": "12471885200579325840"
-      },
-      {
-        "file": ".env",
-        "hash": "5641520630059527378"
-      },
-      {
         "file": "docker-compose.yml",
         "hash": "9799608229351829448"
       },
       {
-        "file": ".gitignore",
-        "hash": "13404745306227114823"
+        "file": "package-lock.json",
+        "hash": "6817089300345218123"
+      },
+      {
+        "file": "README.md",
+        "hash": "5057489353185349668"
       },
       {
         "file": "jest.config.ts",
         "hash": "3407785570333453138"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "14555790026159132772"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "7473220183190921152"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "12471885200579325840"
       }
     ],
     "projectFileMap": {
       "ui": [
-        {
-          "file": "apps/ui/.env.development",
-          "hash": "18219906330224423722"
-        },
         {
           "file": "apps/ui/.eslintrc.json",
           "hash": "14830867113928387670"
@@ -495,7 +479,7 @@
         },
         {
           "file": "apps/ui/src/main.tsx",
-          "hash": "15464563283740279149",
+          "hash": "5462557125949002553",
           "deps": [
             "npm:react-dom",
             "npm:@rainbow-me/rainbowkit",
@@ -517,7 +501,7 @@
         },
         {
           "file": "apps/ui/vite.config.ts",
-          "hash": "1204071572935476013",
+          "hash": "9398369929520577468",
           "deps": [
             "npm:vite",
             "npm:@vitejs/plugin-react",

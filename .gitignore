@@ -11,5 +11,5 @@ dist
 stats.html
 
 .eslintcache
-
+apps/ui/.env.*
 .env.*

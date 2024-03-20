@@ -1,5 +1,5 @@
 {
-  "17423852856293075901": {
+  "16979346243375368391": {
     "build": {
       "command": "vite build",
       "options": {
@@ -60,7 +60,7 @@
       ]
     }
   },
-  "8988251094062785414": {
+  "4646885113133449951": {
     "build": {
       "command": "vite build",
       "options": {
@@ -121,7 +121,7 @@
       ]
     }
   },
-  "8344703277656686262": {
+  "9342169627726160831": {
     "build": {
       "command": "vite build",
       "options": {
@@ -182,7 +182,7 @@
       ]
     }
   },
-  "5008103726050397244": {
+  "10126605062049749624": {
     "build": {
       "command": "vite build",
       "options": {
@@ -243,7 +243,7 @@
       ]
     }
   },
-  "13434069399055343869": {
+  "5036284857217881658": {
     "build": {
       "command": "vite build",
       "options": {
@@ -304,7 +304,7 @@
       ]
     }
   },
-  "11763088629189083146": {
+  "2617366581878988546": {
     "build": {
       "command": "vite build",
       "options": {
@@ -365,7 +365,7 @@
       ]
     }
   },
-  "2215404795133338614": {
+  "2964359756590582921": {
     "build": {
       "command": "vite build",
       "options": {
@@ -426,7 +426,7 @@
       ]
     }
   },
-  "13449067626602662878": {
+  "2638264334362373598": {
     "build": {
       "command": "vite build",
       "options": {
@@ -487,7 +487,7 @@
       ]
     }
   },
-  "10123373667142003267": {
+  "6908428958110027950": {
     "build": {
       "command": "vite build",
       "options": {
@@ -548,7 +548,7 @@
       ]
     }
   },
-  "16358145399296798958": {
+  "16705094533254045639": {
     "build": {
       "command": "vite build",
       "options": {
@@ -609,7 +609,7 @@
       ]
     }
   },
-  "9465839869406935494": {
+  "9278512206095705346": {
     "build": {
       "command": "vite build",
       "options": {
@@ -670,7 +670,7 @@
       ]
     }
   },
-  "15319995130896954078": {
+  "10468654475979523858": {
     "build": {
       "command": "vite build",
       "options": {
@@ -731,373 +731,7 @@
       ]
     }
   },
-  "6931141179438814831": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "16709602424057651059": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "3948454573439511984": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "15371974917929565071": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "9695305442517938994": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "17843507175408754144": {
-    "build": {
-      "command": "vite build",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "externalDependencies": [
-            "vite"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\dist\\apps\\privatesale"
-      ]
-    },
-    "serve": {
-      "command": "vite serve",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "preview": {
-      "command": "vite preview",
-      "options": {
-        "cwd": "apps/ui"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "test": {
-      "command": "vitest run",
-      "options": {
-        "cwd": "apps/ui"
-      },
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        {
-          "externalDependencies": [
-            "vitest"
-          ]
-        }
-      ],
-      "outputs": [
-        "{workspaceRoot}\\coverage\\apps\\privatesale"
-      ]
-    }
-  },
-  "17913470600905618748": {
+  "8988712602049620074": {
     "build": {
       "command": "vite build",
       "options": {
