@@ -115,36 +115,36 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "package.json",
-        "hash": "6321066188486032264"
-      },
-      {
-        "file": "nx.json",
-        "hash": "1054151259499075504"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "9799608229351829448"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "6817089300345218123"
+        "file": ".gitignore",
+        "hash": "17651709012766788587"
       },
       {
         "file": "README.md",
         "hash": "5057489353185349668"
       },
       {
+        "file": "docker-compose.yml",
+        "hash": "9799608229351829448"
+      },
+      {
         "file": "jest.config.ts",
         "hash": "3407785570333453138"
       },
       {
-        "file": ".gitignore",
-        "hash": "14555790026159132772"
-      },
-      {
         "file": "jest.preset.js",
         "hash": "7473220183190921152"
+      },
+      {
+        "file": "nx.json",
+        "hash": "1054151259499075504"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "6817089300345218123"
+      },
+      {
+        "file": "package.json",
+        "hash": "6321066188486032264"
       },
       {
         "file": "tsconfig.base.json",
@@ -479,7 +479,7 @@
         },
         {
           "file": "apps/ui/src/main.tsx",
-          "hash": "5462557125949002553",
+          "hash": "15464563283740279149",
           "deps": [
             "npm:react-dom",
             "npm:@rainbow-me/rainbowkit",
