@@ -1,16 +1,19 @@
 .wallet {
   margin-left: auto;
+  border-radius: 10px;
 
   .popup__anchor::part(base) {
-    transition: background-color 250ms ease-in-out;
     border: none;
-    background-color: $color-brand;
+    border-radius: 10px;
+    align-items: center;
+    color: $color-text;
+    justify-content: center;
+    transition: background-color 250ms ease-in-out;
+    background-color: #f716a2;
 
-    &:hover {
-      color: $color-text;
-      background-color: $color-primary;
-      border-color: var(--sl-input-border-color);
-    }
+    // &:hover {
+    //   color: $color-text;
+    // }
   }
   .wallet__content {
     font-size: 0.8rem;

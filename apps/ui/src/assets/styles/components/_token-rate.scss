@@ -1,10 +1,7 @@
 .token-rate {
-  &::part(base) {
-    border-radius: 10px;
-    background-color: $color-primary;
-    border: none;
-  }
+  border: none;
   &::part(body) {
+    background-color: #1a1b1f;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -1,3 +1,10 @@
 .not-found {
-
+  &__button {
+    background-color: $color-brand;
+    border-radius: 10px;
+    width: 100px;
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }

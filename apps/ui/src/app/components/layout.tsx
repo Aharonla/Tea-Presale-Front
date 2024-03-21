@@ -1,7 +1,7 @@
-import React, { useEffect, useLayoutEffect } from 'react';
-import { TopBar } from './top-bar';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { LoginStatus, useUserContext } from '../context/user.context';
+import React, { useEffect, useLayoutEffect } from "react";
+import { TopBar } from "./top-bar";
+import { Outlet, useNavigate } from "react-router-dom";
+import { LoginStatus, useUserContext } from "../context/user.context";
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ export const Layout = () => {
 
   useLayoutEffect(() => {
     if (status === LoginStatus.LOGGED_OUT) {
-      navigate('/');
+      navigate("/");
     }
   }, [navigate, status]);
 

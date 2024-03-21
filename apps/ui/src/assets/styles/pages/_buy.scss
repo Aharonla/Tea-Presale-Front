@@ -1,196 +1,129 @@
 .buy {
   display: grid;
-  width: 600px;
-  margin-inline: auto;
-  // gap: 24px;
+  width: 100%;
+  justify-content: center;
+  .swap {
+    width: 90%;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    margin-left: 5%;
+    background-color: #1a1b1f;
 
-  .card {
-    &::part(header) {
-      padding-top: 1em;
-      text-align: start;
-      border-bottom: none;
-    }
-    &::part(base) {
-      margin-top: 20px;
-      background-color: $color-primary;
-      border-radius: 0;
-      border: none;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-
-    &:has(.card__inner)::part(header) {
-      padding-bottom: 0;
-    }
-
-    --gap: 8px;
-
-    &__inner:not(.noti) {
-      margin-bottom: var(--gap);
-    }
-
-    &__inner {
-      width: 100%;
-
-      &:has(.convert-icon) {
-        position: relative;
-
-        .convert-icon {
-          position: absolute;
-          top: calc(100% + var(--gap) / 2);
-          translate: 0 -50%;
-          left: 0;
-          right: 0;
-          margin: auto;
-          font-size: 1.5rem;
-          color: $color-brand;
-        }
-      }
-      &::part(base) {
-        display: grid;
-        border: none;
-        grid-template-columns: min-content auto;
-        gap: 30px;
+    &__body {
+      margin-top: 50px;
+      margin-bottom: 50px;
+      padding-inline: 40px;
+      min-height: initial;
+      align-items: center;
+      .token-rate {
+        display: flex;
         align-items: center;
-        background-color: $color-input;
-        border-radius: 10px;
+        margin-bottom: 40px;
+        &__token {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+        &__logo {
+          margin-right: 10px;
+          width: 50px;
+          height: 50px;
+        }
       }
-      &::part(body) {
-        background-color: $color-input;
-        border-radius: 10px;
-        display: grid;
-        grid-template-columns: min-content auto;
-        gap: 30px;
+      .vertical-line {
+        width: 1px;
+        height: 20px;
+        background-color: #aaa;
+        margin-left: 10px;
+      }
+      .convert-icon {
+        margin-block: 10px;
+        width: 30px;
+        height: 30px;
+        @include gt-sm {
+          transform: rotate(90deg);
+          margin-inline: 1%;
+        }
+      }
+
+      .coin-center {
+        display: flex;
+        @include lt-md {
+          display: block;
+        }
+
+        justify-content: space-between;
         align-items: center;
-      }
-    }
-
-    .select-coin {
-      text-align: start;
-      &::part(base) {
-        background-color: $color-input;
-      }
-
-      &::part(combobox) {
-        background-color: $color-input;
-        border: none;
-        font-size: 1rem;
-        min-width: 180px;
-        padding-left: 1.7em;
-      }
-
-      &[disabled] {
-        &::part(combobox) {
-          background-color: $color-input;
-          min-width: 150px;
-          opacity: 1;
-          cursor: default;
-        }
-
-        &::part(expand-icon) {
-          display: none;
-        }
-      }
-
-      &::part(prefix),
-      ::part(prefix) {
-        min-width: 2em;
-        width: 2em;
-        height: 2em;
-        margin-right: 0.75em;
-      }
-
-      .coin-icon {
-        border-radius: 50%;
         width: 100%;
-        height: 100%;
       }
 
-      &::part(display-input) {
-        font-weight: 700;
-        color: $color-text;
-      }
+      .coin-section {
+        width: 100%;
 
-      sl-option {
-        --sl-color-primary-600: #{var(--sl-color-gray-50)};
-        --sl-color-neutral-0: #{var(--sl-color-gray-700)};
-
-        &:hover {
-          --sl-color-neutral-0: #{var(--sl-color-gray-800)};
+        &__header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-inline: 20px;
+          height: 0px;
         }
 
-        &::part(base) {
-          transition: all 0.3s;
-          font-weight: 700;
+        &__input {
+          display: flex;
+          align-items: center;
+          padding-inline: 10px;
+          padding-block: 10px;
+          border-radius: 10px;
+          background-color: #2e3136;
         }
 
-        &::part(checked-icon) {
-          color: $color-primary;
-          width: 1.2em;
-          height: 1.2em;
-          padding-right: 0;
+        &__icon {
+          width: 25px;
+          height: 25px;
+          margin-right: 5px;
+          border-radius: 50%;
         }
 
-        &::part(label) {
-          font-weight: 700;
+        &__label {
+          font-size: 0.6rem;
+          color: #aaa;
         }
-      }
-    }
-
-    .amount {
-      // display: flex;
-      gap: 4px;
-      text-align: end;
-      --sl-input-spacing-medium: 0;
-
-      &__input {
-        --sl-input-placeholder-color: #cccece;
-
-        &::part(input) {
-          text-align: end;
-          color: $color-placeholder;
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        /* Firefox */
+        input[type="number"] {
+          appearance: none;
+          -moz-appearance: textfield;
         }
 
-        &::part(base) {
+        .txtinput {
+          background-color: #2e3136;
           font-size: 1.5rem;
           font-weight: 700;
           border: none;
           width: 100%;
-          box-shadow: none;
-          background-color: $color-input;
+          text-align: end;
+          align-self: flex-end;
+          width: 100%;
+          color: white;
+          outline: none;
         }
       }
-
-      &__after {
-        color: $color-text-secondary;
-        font-size: 1.5rem;
-        font-weight: 700;
-      }
-
-      &__balance {
-        color: $color-text-secondary;
-        font-size: 0.75rem;
-        height: 1em;
-      }
     }
-  }
-  .buy__btn {
-    &::part(base) {
+
+    .swap-button {
+      width: 100%;
       background-color: $color-brand;
-      border: none;
-      border-radius: 0;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
-      transition: all 100ms ease-in-out 25ms;
-    }
-    &[disabled] {
-      &::part(base) {
-        opacity: 0.8;
-        // border-color: $color-disabled;
-        // background-color: $color-brand;
-      }
-      &::part(label) {
-        color: $color-text;
+      color: white;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      &[disabled] {
+        background-color: darken($color-brand, 20%);
       }
     }
   }

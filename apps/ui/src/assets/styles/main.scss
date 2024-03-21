@@ -1,6 +1,7 @@
 /* Setup */
 @import "setup/typography";
 @import "setup/variables";
+@import "setup/media-queries";
 
 /* Base */
 @import "base/reset";
@@ -14,7 +15,7 @@
 @import "components/connect-wallet";
 @import "components/token-rate";
 @import "components/countdown";
-@import "components/vertical-line";
+@import "components/popup-dialog";
 
 /* Pages */
 @import "pages/claim";

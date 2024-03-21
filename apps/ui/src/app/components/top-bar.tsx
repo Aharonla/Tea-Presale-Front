@@ -1,14 +1,19 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Wallet } from "./wallet";
-import teaSwap from "../../assets/icons/tea-swap.svg";
+import teaLogo from "../../assets/icons/tea-logo.svg";
 
 export const TopBar = () => {
   return (
     <div className="top-bar">
       <div className="container">
-        <div className="top-bar__logo">
-          <img src={teaSwap} alt="Noti" />
+        <div className="logo-container">
+          <div className="top-bar__logo">
+            <img src={teaLogo} alt="TeaToken" />
+          </div>
+          <p>
+            <strong>Tea</strong> Presale
+          </p>
         </div>
         <nav className="top-bar__menu">
           <ul>

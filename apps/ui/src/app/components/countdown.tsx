@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { SlCard } from '@shoelace-style/shoelace/dist/react';
-import { env } from '../utils/env';
+import { useEffect, useMemo, useState } from "react";
+import { env } from "../utils/env";
 
 export const Countdown = () => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
@@ -34,19 +33,31 @@ export const Countdown = () => {
     };
   }, []);
 
-  const timeLeft = useMemo(() => ({
-    days: isActive && secondsToEnd ? Math.floor(secondsToEnd / 86400) : 0,
-    hours: isActive && secondsToEnd ? Math.floor((secondsToEnd % 86400) / 3600) : 0,
-    minutes: isActive && secondsToEnd ? Math.floor((secondsToEnd % 3600) / 60) : 0,
-    seconds: isActive && secondsToEnd ? secondsToEnd % 60 : 0
-  }), [isActive, secondsToEnd]);
+  const timeLeft = useMemo(
+    () => ({
+      days: isActive && secondsToEnd ? Math.floor(secondsToEnd / 86400) : 0,
+      hours:
+        isActive && secondsToEnd
+          ? Math.floor((secondsToEnd % 86400) / 3600)
+          : 0,
+      minutes:
+        isActive && secondsToEnd ? Math.floor((secondsToEnd % 3600) / 60) : 0,
+      seconds: isActive && secondsToEnd ? secondsToEnd % 60 : 0,
+    }),
+    [isActive, secondsToEnd]
+  );
 
   return (
-    <SlCard data-hidden={secondsToEnd === null} className={`countdown ${isActive === false ? 'done' : ''}`}>
+    <div
+      data-hidden={secondsToEnd === null}
+      className={`countdown ${isActive === false ? "done" : ""}`}
+    >
       <div className="countdown__inner">
         <div className="countdown__title">
-          <h2><span>{countdownName}</span></h2>
-          <span>end{isActive ? `s In:` : 'ed!'}</span>
+          <h2>
+            <span>{countdownName}</span>
+          </h2>
+          <span>end{isActive ? `s In:` : "ed!"}</span>
         </div>
         <div className="countdown__timer">
           <span className="countdown__timer__value">{timeLeft.days}</span>
@@ -65,6 +76,6 @@ export const Countdown = () => {
           <span className="countdown__timer__label">Seconds</span>
         </div>
       </div>
-    </SlCard>
+    </div>
   );
 };
