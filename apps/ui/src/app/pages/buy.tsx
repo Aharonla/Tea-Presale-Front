@@ -5,16 +5,22 @@ import React, {
   useRef,
   useState,
 } from "react";
-
+import {
+  SlCard,
+  SlSelect,
+  SlOption,
+  SlIcon,
+  SlButton,
+} from "@shoelace-style/shoelace/dist/react";
+import { useMetaMaskContext } from "../context/metamask.context";
 import tetherIcon from "../../assets/icons/tether.svg";
 import ethereumIcon from "../../assets/icons/ethereum.svg";
+import { CoinInput } from "../components/coin-input";
 import { useCoin } from "../hooks/useCoin";
 import { TokenRate } from "../components/token-rate";
 import teaToken from "../../assets/icons/tea-token.svg";
 import { Countdown } from "../components/countdown";
-import swapArrow from "../../assets/icons/swap.png";
-import { useAccount, useBalance } from "wagmi";
-import { CoinSection } from "../components/coin-section";
+import { VerticalLine } from "../components/vertical-line";
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: "ETH", value: "eth" },
@@ -22,27 +28,36 @@ const mappedCoins = {
 };
 export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ["eth", "usdt"];
-
 export const Buy = () => {
-  const lastInputTouched = useRef<"tea" | "coin" | null>(null);
-
+  const lastInputTouched = useRef<"noti" | "coin" | null>(null);
   const [selectedCoin, setSelectedCoin] = useState<CoinType>("usdt");
   const [amount, setAmount] = useState<number>();
-  const [amointInTea, setmountInTea] = useState<number>();
-  const { address, chainId, isConnected } = useAccount();
+  const [amountInNoti, setAmountInNoti] = useState<number>();
+  const { balance } = useMetaMaskContext();
   const { convertCoin, coinValuation } = useCoin();
 
   const updateValueOfLastTouchedInput = useCallback(() => {
-    if (lastInputTouched.current === "tea") {
-      setAmount(() => convertCoin(amointInTea, false, selectedCoin));
+    if (lastInputTouched.current === "noti") {
+      setAmount(() => convertCoin(amountInNoti, false, selectedCoin));
     } else if (lastInputTouched.current === "coin") {
-      setmountInTea(() => convertCoin(amount, true, selectedCoin));
+      setAmountInNoti(() => convertCoin(amount, true, selectedCoin));
     }
-  }, [amount, amointInTea, convertCoin, selectedCoin]);
+  }, [amount, amountInNoti, convertCoin, selectedCoin]);
 
-  const swapButtonDisabled = useMemo(() => {
-    return !amount || coinValuation[selectedCoin] === null, !isConnected;
-  }, [amount, coinValuation, selectedCoin]);
+  const formattedBalance = useMemo(() => {
+    if (balance[selectedCoin] === null) {
+      return "--";
+    }
+    return `Balance: ${balance[selectedCoin]} ${mappedCoins[selectedCoin]?.label}`;
+  }, [balance, selectedCoin]);
+
+  const buyButtonDisabled = useMemo(() => {
+    return (
+      !amount ||
+      balance[selectedCoin] === null ||
+      coinValuation[selectedCoin] === null
+    );
+  }, [amount, balance, coinValuation, selectedCoin]);
 
   useEffect(() => {
     updateValueOfLastTouchedInput();
@@ -50,40 +65,81 @@ export const Buy = () => {
 
   return (
     <div className="buy page">
-      <div className="swap">
-        <div className="swap__body">
-          <TokenRate />
-          <div className="coin-center">
-            <CoinSection
-              symbol={"USDT"}
-              logo={tetherIcon}
+      <TokenRate />
+      <SlCard className="card">
+        {/* <h2 slot="header">Buy</h2> */}
+        <SlCard className="card__inner">
+          <SlSelect
+            disabled={true}
+            size="large"
+            value={selectedCoin}
+            onSlInput={(e) => {
+              setSelectedCoin(
+                (e.target as HTMLSelectElement).value as CoinType
+              );
+              updateValueOfLastTouchedInput();
+            }}
+            className="select-coin"
+          >
+            <img
+              className="coin-icon"
+              slot="prefix"
+              src={mappedCoins[selectedCoin]?.icon}
+              alt="Ethereum"
+            />
+            {coins
+              .map((key) => mappedCoins[key])
+              .map(({ icon, label, value }) => (
+                <SlOption value={value} key={value}>
+                  <img
+                    className="coin-icon"
+                    slot="prefix"
+                    src={icon}
+                    alt="Ethereum"
+                  />
+                  {label}
+                </SlOption>
+              ))}
+          </SlSelect>
+          <div className="amount">
+            <small className="amount__balance">{formattedBalance}</small>
+            <CoinInput
               valueAsNumber={amount}
-              isPayment
               decimals={18}
               onChangeValue={(value) => {
                 lastInputTouched.current = "coin";
                 setAmount(value);
-                setmountInTea(convertCoin(value, true, selectedCoin));
-              }}
-            />
-            <img src={swapArrow} alt="swap-arrow" className="convert-icon" />
-            <CoinSection
-              symbol={"TEA"}
-              logo={teaToken}
-              valueAsNumber={amointInTea}
-              decimals={9}
-              onChangeValue={(value) => {
-                lastInputTouched.current = "tea";
-                setAmount(convertCoin(value, false, selectedCoin));
-                setmountInTea(value);
+                setAmountInNoti(convertCoin(value, true, selectedCoin));
               }}
             />
           </div>
-        </div>
-        <button disabled={swapButtonDisabled} className="swap-button">
-          SWAP
-        </button>
-      </div>
+          <SlIcon name="arrow-down-circle-fill" className="convert-icon" />
+        </SlCard>
+        <SlCard className="card__inner noti">
+          <SlSelect size="large" value="noti" className="select-coin" disabled>
+            <img src={teaToken} alt="TEA" slot="prefix" className="coin-icon" />
+            <SlOption value="noti">TEA</SlOption>
+          </SlSelect>
+          <div className="amount">
+            <CoinInput
+              valueAsNumber={amountInNoti}
+              decimals={9}
+              onChangeValue={(value) => {
+                lastInputTouched.current = "noti";
+                setAmount(convertCoin(value, false, selectedCoin));
+                setAmountInNoti(value);
+              }}
+            />
+          </div>
+        </SlCard>
+      </SlCard>
+      <SlButton
+        disabled={buyButtonDisabled}
+        variant="primary"
+        className="buy__btn"
+      >
+        BUY TEA
+      </SlButton>
     </div>
   );
 };

@@ -12,10 +12,10 @@
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
     "@nestjs/typeorm": "^10.0.2",
-    "@rainbow-me/rainbowkit": "^2.0.2",
-    "@tanstack/react-query": "^5.28.4",
+    "@shoelace-style/shoelace": "^2.14.0",
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
+    "ethers": "^6.11.1",
     "mysql2": "^3.9.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -24,8 +24,6 @@
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.20",
-    "viem": "^2.8.14",
-    "wagmi": "^2.5.11",
     "zod": "^3.22.4"
   },
   "devDependencies": {

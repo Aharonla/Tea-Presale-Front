@@ -29,21 +29,17 @@
   }
 
   .terms {
-    margin-inline: 1em;
-    padding-block: 0;
-    padding: 1em;
-    border-radius: 0.5em;
-    border: 1px solid #ccc;
-    max-height: 350px;
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    font-size: 0.8em;
-
-    // &::part(body) {
-    // }
-    // &::part(close-button) {
-    // }
+    &::part(body) {
+      margin-inline: 1em;
+      padding-block: 0;
+      padding: 1em;
+      border-radius: 0.5em;
+      border: 1px solid #ccc;
+      max-height: 350px;
+    }
+    &::part(close-button) {
+      font-size: 0.8em;
+    }
     &__content {
       font-size: 0.8em;
       overflow-x: auto;
