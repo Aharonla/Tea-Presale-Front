@@ -1,6 +1,8 @@
 .top-bar {
   color: $color-text;
-  padding-top: 16px;
+  padding-block: 30px;
+  background-color: $bg-top-bar;
+  padding-inline: 2%;
 
   .container {
     display: grid;
@@ -19,17 +21,16 @@
   &__menu ul {
     display: flex;
     gap: 1em;
+    text-decoration: none;
 
     a {
-      font-size: 0.9em;
+      font-size: 1.2rem;
+      color: $color-text-secondary;
     }
 
     a.active {
-      text-decoration: underline;
-      text-underline-offset: 0.2em;
-      text-decoration-thickness: 0.1em;
-      text-decoration-color: $color-primary;
-      text-decoration-style: solid;
+      text-decoration: none;
+      color: $color-text;
     }
   }
 }
