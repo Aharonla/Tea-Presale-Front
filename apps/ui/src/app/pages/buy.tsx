@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SlCard, SlSelect, SlOption, SlIcon, SlButton } from '@shoelace-style/shoelace/dist/react';
-import { useMetaMaskContext } from '../context/metamask.context';
 import tetherIcon from '../../assets/icons/tether.svg';
 import ethereumIcon from '../../assets/icons/ethereum.svg';
 import { CoinInput } from '../components/coin-input';
@@ -9,7 +8,10 @@ import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
 import { VerticalLine } from '../components/vertical-line';
-
+import { useAccount, useBalance, useReadContracts } from 'wagmi';
+import { erc20Abi } from 'viem';
+import { formatUnits } from 'viem';
+import { getBalance } from '@wagmi/core';
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth' },
   usdt: { icon: tetherIcon, label: 'USD₮', value: 'usdt' },
@@ -21,8 +23,13 @@ export const Buy = () => {
   const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdt');
   const [amount, setAmount] = useState<number>();
   const [amountInNoti, setAmountInNoti] = useState<number>();
-  const { balance } = useMetaMaskContext();
   const { convertCoin, coinValuation } = useCoin();
+  const [balances, setBalances] = useState([]);
+  const { address, isConnected } = useAccount();
+
+  const res = useBalance({ address });
+  const balance = res.data?.value ? formatUnits(res.data!.value, res.data!.decimals) : '--';
+  console.log(balance);
 
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'noti') {
@@ -47,6 +54,12 @@ export const Buy = () => {
     updateValueOfLastTouchedInput();
   }, [updateValueOfLastTouchedInput]);
 
+  useEffect(() => {
+    // will fetch all the balances
+    const fetchBalances = async () => {
+      const ethBlance = await getBalance({ address });
+    };
+  }, [isConnected]);
   return (
     <div className="buy page">
       <TokenRate />
