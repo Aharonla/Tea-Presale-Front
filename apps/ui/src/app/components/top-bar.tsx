@@ -8,7 +8,7 @@ export const TopBar = () => {
     <div className="top-bar">
       <div className="container">
         <div className="top-bar__logo">
-          <img src={teaSwap} alt="Noti" />
+          <img src={teaSwap} alt="Tea" />
         </div>
         <nav className="top-bar__menu">
           <ul>

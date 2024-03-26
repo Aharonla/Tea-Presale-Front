@@ -17,20 +17,20 @@ const mappedCoins = {
 export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ['eth', 'usdt'];
 export const Buy = () => {
-  const lastInputTouched = useRef<'noti' | 'coin' | null>(null);
+  const lastInputTouched = useRef<'tea' | 'coin' | null>(null);
   const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdt');
   const [amount, setAmount] = useState<number>();
-  const [amountInNoti, setAmountInNoti] = useState<number>();
+  const [amountInTea, setAmountInTea] = useState<number>();
   const { balance } = useMetaMaskContext();
   const { convertCoin, coinValuation } = useCoin();
 
   const updateValueOfLastTouchedInput = useCallback(() => {
-    if (lastInputTouched.current === 'noti') {
-      setAmount(() => convertCoin(amountInNoti, false, selectedCoin));
+    if (lastInputTouched.current === 'tea') {
+      setAmount(() => convertCoin(amountInTea, false, selectedCoin));
     } else if (lastInputTouched.current === 'coin') {
-      setAmountInNoti(() => convertCoin(amount, true, selectedCoin));
+      setAmountInTea(() => convertCoin(amount, true, selectedCoin));
     }
-  }, [amount, amountInNoti, convertCoin, selectedCoin]);
+  }, [amount, amountInTea, convertCoin, selectedCoin]);
 
   const formattedBalance = useMemo(() => {
     if (balance[selectedCoin] === null) {
@@ -51,7 +51,6 @@ export const Buy = () => {
     <div className="buy page">
       <TokenRate />
       <SlCard className="card">
-        {/* <h2 slot="header">Buy</h2> */}
         <SlCard className="card__inner">
           <SlSelect
             disabled={true} // disabled for now -- only usdt is available
@@ -81,25 +80,25 @@ export const Buy = () => {
               onChangeValue={(value) => {
                 lastInputTouched.current = 'coin';
                 setAmount(value);
-                setAmountInNoti(convertCoin(value, true, selectedCoin));
+                setAmountInTea(convertCoin(value, true, selectedCoin));
               }}
             />
           </div>
           <SlIcon name="arrow-down-circle-fill" className="convert-icon" />
         </SlCard>
-        <SlCard className="card__inner noti">
-          <SlSelect size="large" value="noti" className="select-coin" disabled>
-            <img src={teaToken} alt="TEA" slot="prefix" className="coin-icon" />
-            <SlOption value="noti">TEA</SlOption>
+        <SlCard className="card__inner tea">
+          <SlSelect size="large" value="tea" className="select-coin" disabled>
+            <img src={teaToken} alt="Tea" slot="prefix" className="coin-icon" />
+            <SlOption value="tea">TEA</SlOption>
           </SlSelect>
           <div className="amount">
             <CoinInput
-              valueAsNumber={amountInNoti}
+              valueAsNumber={amountInTea}
               decimals={9}
               onChangeValue={(value) => {
-                lastInputTouched.current = 'noti';
+                lastInputTouched.current = 'tea';
                 setAmount(convertCoin(value, false, selectedCoin));
-                setAmountInNoti(value);
+                setAmountInTea(value);
               }}
             />
           </div>

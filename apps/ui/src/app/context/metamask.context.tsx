@@ -10,22 +10,22 @@ enum MetaMaskEvents {
   REQUEST_ACCOUNTS = 'eth_requestAccounts',
   ACCOUNTS = 'eth_accounts',
   ACCOUNTS_CHANGED = 'accountsChanged',
-  GET_BALANCE = 'eth_getBalance'
+  GET_BALANCE = 'eth_getBalance',
 }
 
 enum MetaMaskStatus {
   CONNECTED = 'connected',
   CONNECTING = 'connecting',
   DISCONNECTED = 'disconnected',
-  DISCONNECTING = 'disconnecting'
+  DISCONNECTING = 'disconnecting',
 }
 
 export interface MetaMaskContext {
-  account: string | null,
-  status: MetaMaskStatus,
-  connect: () => void,
-  disconnect: () => void,
-  balance: Record<CoinType, null | string>
+  account: string | null;
+  status: MetaMaskStatus;
+  connect: () => void;
+  disconnect: () => void;
+  balance: Record<CoinType, null | string>;
 }
 
 const METAMASK_ACCOUNT_LOCALSTORAGE_KEY = 'metamask_account';
@@ -33,13 +33,11 @@ export const MetaMaskContext = createContext<MetaMaskContext | null>(null);
 
 const initialValues = {
   account: null,
-  status: MetaMaskStatus.DISCONNECTED
+  status: MetaMaskStatus.DISCONNECTED,
 };
 
 type ContextValues = typeof initialValues;
-export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
-  children
-}) => {
+export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const ethereumRef = useRef(initSDK());
   const [values, setValues] = useState<Pick<MetaMaskContext, keyof ContextValues>>(initValues());
   const [balanceETH, setBalanceETH] = useState<string | null>(null);
@@ -48,10 +46,10 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
   function initSDK(): MetaMaskSDK {
     return new MetaMaskSDK({
       dappMetadata: {
-        name: 'Noti',
-        url: `http${import.meta.env.DEV ? '' : 's'}://${window.location.href.split('/')[2]}`
+        name: 'Tea',
+        url: `http${import.meta.env.DEV ? '' : 's'}://${window.location.href.split('/')[2]}`,
       },
-      extensionOnly: true
+      extensionOnly: true,
     });
   }
 
@@ -66,10 +64,10 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
   const _getBalance = useCallback(async (address: string, block = 'latest') => {
     try {
       const ethereum = ethereumRef.current.getProvider();
-      const balance = await ethereum.request({
+      const balance = (await ethereum.request({
         method: MetaMaskEvents.GET_BALANCE,
-        params: [address, block]
-      }) as string;
+        params: [address, block],
+      })) as string;
 
       const usdtBalance = await getFormattedBalanceOfErc20TokenHolder(USDT, address);
       if (balance === '0x') {
@@ -78,34 +76,36 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
       }
       setBalanceETH(ethers.formatUnits(balance));
       setBalanceUSDT(usdtBalance);
-
     } catch (err) {
       console.error(err);
     }
   }, []);
 
-  const onAccountsChanged = useCallback((accounts: any) => {
-    const [account] = accounts as string[];
-    if (account) {
-      _getBalance(account);
-      setValues(values => ({ ...values, account: account, status: MetaMaskStatus.CONNECTED }));
-    } else {
-      setBalanceETH(null);
-      setValues(values => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
-    }
-  }, [_getBalance]);
+  const onAccountsChanged = useCallback(
+    (accounts: any) => {
+      const [account] = accounts as string[];
+      if (account) {
+        _getBalance(account);
+        setValues((values) => ({ ...values, account: account, status: MetaMaskStatus.CONNECTED }));
+      } else {
+        setBalanceETH(null);
+        setValues((values) => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
+      }
+    },
+    [_getBalance]
+  );
 
   const onAccountsError = useCallback((e: any) => {
     /* User cancelled or exited the popup (rejected request) */
     if (e.code === 4001) {
       setBalanceETH(null);
-      setValues(values => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
+      setValues((values) => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
     }
   }, []);
 
   const connect = useCallback(() => {
     if (ethereumRef.current) {
-      setValues(values => ({ ...values, status: MetaMaskStatus.CONNECTING }));
+      setValues((values) => ({ ...values, status: MetaMaskStatus.CONNECTING }));
       const ethereum = ethereumRef.current.getProvider();
       ethereum.request({ method: MetaMaskEvents.REQUEST_ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
     }
@@ -114,15 +114,11 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
   const disconnect = useCallback(() => {
     setBalanceETH(() => null);
     setBalanceUSDT(() => null);
-    setValues(values => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
+    setValues((values) => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
   }, []);
 
   async function getFormattedBalanceOfErc20TokenHolder(contractAddress: string, address: string) {
-    const usdtErc20Contract = new ethers.Contract(
-      contractAddress,
-      ERC20_ABI,
-      ethers.getDefaultProvider()
-    );
+    const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, ethers.getDefaultProvider());
 
     const balance = await usdtErc20Contract.balanceOf(address);
     const numDecimals = await usdtErc20Contract.decimals();
@@ -143,7 +139,6 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
     }
   }, [onAccountsChanged, onAccountsError, values.status]);
 
-
   useEffect(() => {
     let ethereum: SDKProvider;
 
@@ -156,7 +151,6 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
 
   useEffect(() => {
     window.localStorage.setItem(METAMASK_ACCOUNT_LOCALSTORAGE_KEY, JSON.stringify(values));
-
   }, [values]);
 
   return (
@@ -167,8 +161,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({
         disconnect,
         balance: {
           eth: balanceETH,
-          usdt: balanceUSDT
-        }
+          usdt: balanceUSDT,
+        },
       }}
       children={children}
     />
