@@ -24,12 +24,12 @@
     }
 
     &__anchor::part(base) {
-      background: $color-brand;
+      background: $color-primary;
       &:hover {
         $bg-hover: lighten($color-primary, 15%);
         color: white;
-        background: $color-brand;
-        border-color: $color-brand;
+        background: lighten($color-primary, 15%);
+        border-color: lighten($color-primary, 15%);
       }
     }
 
