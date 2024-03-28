@@ -6,7 +6,9 @@
     --item-row-count: 2;
     --gap: 0.5em;
     --card-width: 150px;
-    --auto-size-available-width: calc(var(--card-width) * var(--item-row-count) + (var(--gap) * 1.5) * (var(--item-row-count) - 1) + 1em);
+    --auto-size-available-width: calc(
+      var(--card-width) * var(--item-row-count) + (var(--gap) * 1.5) * (var(--item-row-count) - 1) + 1em
+    );
 
     &::part(arrow) {
       border-top-left-radius: 1px;
@@ -22,12 +24,12 @@
     }
 
     &__anchor::part(base) {
-      background: $color-primary;
+      background: $color-brand;
       &:hover {
         $bg-hover: lighten($color-primary, 15%);
         color: white;
-        background: $bg-hover;
-        border-color: $bg-hover;
+        background: $color-brand;
+        border-color: $color-brand;
       }
     }
 
@@ -62,7 +64,7 @@
       }
     }
 
-    &[data-connecting="true"] {
+    &[data-connecting='true'] {
       cursor: wait;
 
       .spinner {
@@ -72,7 +74,7 @@
       }
     }
 
-    &[data-connected="true"] {
+    &[data-connected='true'] {
       cursor: default;
     }
 
@@ -80,9 +82,10 @@
       position: relative;
       overflow: hidden;
       background-color: #{fade-out($color-placeholder, 0.9)};
-
+      color: #fff;
       &:hover {
-        color: var(--sl-color-neutral-800);
+        // color: var(--sl-color-neutral-800);
+        color: $color-brand;
         border-color: var(--sl-color-neutral-300);
       }
 
