@@ -56,3 +56,15 @@ out
 .npm/
 .profile
 .rustup/
+
+*.log
+
+# Output directory
+dist
+
+# @vitjs/vit temporary directory
+.vit
+
+.eslintcache
+apps/ui/.env.*
+.env.*
