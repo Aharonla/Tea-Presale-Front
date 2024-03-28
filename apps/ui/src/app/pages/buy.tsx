@@ -8,11 +8,10 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { VerticalLine } from '../components/vertical-line';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth' },
-  usdt: { icon: tetherIcon, label: 'USD₮', value: 'usdt' },
+  usdt: { icon: tetherIcon, label: 'USDT', value: 'usdt' },
 };
 export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ['eth', 'usdt'];
@@ -62,12 +61,12 @@ export const Buy = () => {
             }}
             className="select-coin"
           >
-            <img className="coin-icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Ethereum" />
+            <img className="coin-icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Tether" />
             {coins
               .map((key) => mappedCoins[key])
               .map(({ icon, label, value }) => (
                 <SlOption value={value} key={value}>
-                  <img className="coin-icon" slot="prefix" src={icon} alt="Ethereum" />
+                  <img className="coin-icon" slot="prefix" src={icon} alt="Tether" />
                   {label}
                 </SlOption>
               ))}

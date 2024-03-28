@@ -24,12 +24,12 @@
     }
 
     &__anchor::part(base) {
-      background: $color-primary;
+      background: $color-brand;
       &:hover {
         $bg-hover: lighten($color-primary, 15%);
         color: white;
-        background: lighten($color-primary, 15%);
-        border-color: lighten($color-primary, 15%);
+        background: $color-brand;
+        border-color: $color-brand;
       }
     }
 
@@ -82,9 +82,10 @@
       position: relative;
       overflow: hidden;
       background-color: #{fade-out($color-placeholder, 0.9)};
-
+      color: #fff;
       &:hover {
-        color: var(--sl-color-neutral-800);
+        // color: var(--sl-color-neutral-800);
+        color: $color-brand;
         border-color: var(--sl-color-neutral-300);
       }
 
