@@ -3,7 +3,7 @@ import type { FunctionComponent, ReactNode } from 'react';
 import MetaMaskSDK, { SDKProvider } from '@metamask/sdk';
 import { ethers } from 'ethers';
 import { ERC20_ABI } from '../utils/erc20_abi';
-import { USDT } from '../utils/constants';
+import { USDT, USDC } from '../utils/constants';
 import { CoinType } from '../pages/buy';
 
 enum MetaMaskEvents {
@@ -42,6 +42,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
   const [values, setValues] = useState<Pick<MetaMaskContext, keyof ContextValues>>(initValues());
   const [balanceETH, setBalanceETH] = useState<string | null>(null);
   const [balanceUSDT, setBalanceUSDT] = useState<string | null>(null);
+  const [balanceUSDC, setBalanceUSDC] = useState<string | null>(null);
 
   function initSDK(): MetaMaskSDK {
     return new MetaMaskSDK({
@@ -49,6 +50,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         name: 'Tea',
         url: `http${import.meta.env.DEV ? '' : 's'}://${window.location.href.split('/')[2]}`,
       },
+      infuraAPIKey: import.meta.env.VITE_PUBLIC_INFURA_API,
       extensionOnly: true,
     });
   }
@@ -64,20 +66,24 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
   const _getBalance = useCallback(async (address: string, block = 'latest') => {
     try {
       const ethereum = ethereumRef.current.getProvider();
-      const balance = (await ethereum.request({
+      const balance = (await ethereum?.request({
         method: MetaMaskEvents.GET_BALANCE,
         params: [address, block],
       })) as string;
 
-      const usdtBalance = await getFormattedBalanceOfErc20TokenHolder(USDT, address);
+      // const usdtBalance = await getFormattedBalanceOfErc20TokenHolder(USDT, address);
+      const usdcBalance = await getFormattedBalanceOfErc20TokenHolder(USDC, address);
+
       if (balance === '0x') {
         setBalanceETH('0');
         return;
       }
       setBalanceETH(ethers.formatUnits(balance));
-      setBalanceUSDT(usdtBalance);
+
+      // setBalanceUSDT(usdtBalance);  // removed in testnet
+      setBalanceUSDC(usdcBalance);
     } catch (err) {
-      console.error(err);
+      console.error('==>', err);
     }
   }, []);
 
@@ -107,7 +113,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
     if (ethereumRef.current) {
       setValues((values) => ({ ...values, status: MetaMaskStatus.CONNECTING }));
       const ethereum = ethereumRef.current.getProvider();
-      ethereum.request({ method: MetaMaskEvents.REQUEST_ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
+      ethereum;
+      ''.request({ method: MetaMaskEvents.REQUEST_ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
     }
   }, [onAccountsChanged, onAccountsError]);
 
@@ -118,7 +125,9 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
   }, []);
 
   async function getFormattedBalanceOfErc20TokenHolder(contractAddress: string, address: string) {
-    const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, ethers.getDefaultProvider());
+    // updated provider with custom url for better testnet experience
+    const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+    const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, provider);
 
     const balance = await usdtErc20Contract.balanceOf(address);
     const numDecimals = await usdtErc20Contract.decimals();
@@ -128,14 +137,14 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
 
   const initAccountsListener = useCallback(() => {
     const ethereum = ethereumRef.current.getProvider();
-    if (!ethereum.isConnected()) setTimeout(initAccountsListener, 500);
+    if (!ethereum?.isConnected()) setTimeout(initAccountsListener, 500);
 
     /* Register listener for account changes */
-    ethereum.on(MetaMaskEvents.ACCOUNTS_CHANGED, onAccountsChanged);
+    ethereum?.on(MetaMaskEvents.ACCOUNTS_CHANGED, onAccountsChanged);
 
     /* Request account unless a connecting process is pending or is in a disconnected state */
     if (values.status !== MetaMaskStatus.CONNECTING && values.status !== MetaMaskStatus.DISCONNECTED) {
-      ethereum.request({ method: MetaMaskEvents.ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
+      ethereum?.request({ method: MetaMaskEvents.ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
     }
   }, [onAccountsChanged, onAccountsError, values.status]);
 
@@ -162,6 +171,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         balance: {
           eth: balanceETH,
           usdt: balanceUSDT,
+          usdc: balanceUSDC,
         },
       }}
       children={children}
