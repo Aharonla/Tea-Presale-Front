@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SlCard, SlSelect, SlOption, SlIcon, SlButton } from '@shoelace-style/shoelace/dist/react';
 import { useMetaMaskContext } from '../context/metamask.context';
 import tetherIcon from '../../assets/icons/tether.svg';
+import usdcIcon from '../../assets/icons/usd-coin-usdc-logo.svg';
 import ethereumIcon from '../../assets/icons/ethereum.svg';
 import { CoinInput } from '../components/coin-input';
 import { useCoin } from '../hooks/useCoin';
@@ -12,12 +13,13 @@ import { Countdown } from '../components/countdown';
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth' },
   usdt: { icon: tetherIcon, label: 'USDT', value: 'usdt' },
+  usdc: { icon: usdcIcon, label: 'USDC', value: 'usdc' },
 };
 export type CoinType = keyof typeof mappedCoins;
-const coins: CoinType[] = ['eth', 'usdt'];
+const coins: CoinType[] = ['usdc', 'usdt'];
 export const Buy = () => {
   const lastInputTouched = useRef<'tea' | 'coin' | null>(null);
-  const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdt');
+  const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdc');
   const [amount, setAmount] = useState<number>();
   const [amountInTea, setAmountInTea] = useState<number>();
   const { balance } = useMetaMaskContext();
@@ -52,7 +54,6 @@ export const Buy = () => {
       <SlCard className="card">
         <SlCard className="card__inner">
           <SlSelect
-            disabled={true} // disabled for now -- only usdt is available
             size="large"
             value={selectedCoin}
             onSlInput={(e) => {
