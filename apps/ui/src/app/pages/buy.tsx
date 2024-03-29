@@ -9,7 +9,7 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { enterPersale, getTokenAllowance, setTokenApprove } from '../utils/presale';
+import { enterPersale, getRoundPrice, getTokenAllowance, setTokenApprove } from '../utils/presale';
 import { PRESALE_CONTRACT_ADDRESS, USDC } from '../utils/constants';
 
 const mappedCoins = {
@@ -28,7 +28,8 @@ export const Buy = () => {
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventType, setEventType] = useState<string>('primary');
   const { balance, account } = useMetaMaskContext();
-  const { convertCoin, coinValuation } = useCoin();
+  const [tokenPrice, setTokenPrice] = useState<number>(0);
+  const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [tokenAllowance, setAllowance] = useState<number>(0);
 
   const updateValueOfLastTouchedInput = useCallback(() => {
@@ -65,6 +66,15 @@ export const Buy = () => {
   };
 
   useEffect(() => {
+    const getTokenPrice = async () => {
+      if (account) {
+        const price = await getRoundPrice();
+        setTokenPrice(price);
+      } else {
+        return 0;
+      }
+    };
+    getTokenPrice();
     getAllowance();
   }, [getAllowance]);
 
@@ -132,7 +142,7 @@ export const Buy = () => {
         {eventTitle}
       </SlAlert>
       <Countdown />
-      <TokenRate />
+      {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}
 
       <SlCard className="card">
         <SlCard className="card__inner">
@@ -158,6 +168,7 @@ export const Buy = () => {
           <div className="amount">
             <small className="amount__balance">{formattedBalance}</small>
             <CoinInput
+              disabled={tokenPrice === 0}
               valueAsNumber={amount}
               decimals={18}
               onChangeValue={(value) => {
@@ -176,6 +187,7 @@ export const Buy = () => {
           </SlSelect>
           <div className="amount">
             <CoinInput
+              disabled={tokenPrice === 0}
               valueAsNumber={amountInTea}
               decimals={9}
               onChangeValue={(value) => {

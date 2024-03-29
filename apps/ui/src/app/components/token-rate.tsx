@@ -1,9 +1,11 @@
 import { SlCard, SlFormatNumber } from '@shoelace-style/shoelace/dist/react';
 import { useCoin } from '../hooks/useCoin';
 import teaToken from '../../assets/icons/tea-token.svg';
+interface coinProps {
+  tokenPrice: number;
+}
 
-export const TokenRate = () => {
-  const tokenRate = 0.07;
+export const TokenRate = ({ tokenPrice }: coinProps) => {
   return (
     <SlCard slot="header" className="token-rate">
       <div className="token-rate__name">
@@ -12,7 +14,7 @@ export const TokenRate = () => {
       </div>
       <SlFormatNumber
         className="token-rate__value"
-        value={tokenRate}
+        value={tokenPrice}
         type="currency"
         currency="USD"
         minimumFractionDigits={4}

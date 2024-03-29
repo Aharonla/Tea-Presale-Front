@@ -1,8 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
 import { CoinType } from '../pages/buy';
+interface coinProps {
+  tokenPrice: number;
+}
+export const useCoin = ({ tokenPrice }: coinProps) => {
+  const tokenRate = useRef(tokenPrice ? 1 / tokenPrice : 0);
 
-export const useCoin = () => {
-  const tokenRate = useRef(1 / 0.07);
   const [coinValuation] = useState<Record<CoinType, null | number>>({
     eth: 4001,
     usdt: 1,
