@@ -113,8 +113,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
     if (ethereumRef.current) {
       setValues((values) => ({ ...values, status: MetaMaskStatus.CONNECTING }));
       const ethereum = ethereumRef.current.getProvider();
-      ethereum;
-      ''.request({ method: MetaMaskEvents.REQUEST_ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
+      ethereum?.request({ method: MetaMaskEvents.REQUEST_ACCOUNTS }).then(onAccountsChanged).catch(onAccountsError);
     }
   }, [onAccountsChanged, onAccountsError]);
 
