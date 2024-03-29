@@ -3,7 +3,30 @@
   width: 600px;
   margin-inline: auto;
   // gap: 24px;
+  .alert {
+    &::part(base) {
+      background-color: $color-primary;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+      border-radius: 5px;
+      position: absolute;
+      top: 30px;
+      right: 200px;
+      // transition: all 100ms ease-in-out 25ms;
+      height: 40px;
+      padding-right: 20px;
+      color: '#fff';
+    }
 
+    &::part(message) {
+      color: $color-text-secondary;
+      height: 40px;
+      padding: 0;
+      margin-left: 10px;
+      align-content: center;
+    }
+  }
   .card {
     &::part(header) {
       padding-top: 1em;
@@ -50,7 +73,7 @@
         display: grid;
         border: none;
         grid-template-columns: min-content auto;
-        gap: 30px;
+        gap: 20px;
         align-items: center;
         background-color: $color-input;
         border-radius: 10px;
@@ -73,12 +96,17 @@
 
       &::part(combobox) {
         background-color: $color-input;
+        width: 200px;
         border: none;
         font-size: 1rem;
         min-width: 180px;
         padding-left: 1.7em;
       }
 
+      &::part(listbox) {
+        background-color: $color-input;
+        border: none;
+      }
       &[disabled] {
         &::part(combobox) {
           background-color: $color-input;
@@ -114,14 +142,15 @@
       sl-option {
         --sl-color-primary-600: #{var(--sl-color-gray-50)};
         --sl-color-neutral-0: #{var(--sl-color-gray-700)};
-
         &:hover {
           --sl-color-neutral-0: #{var(--sl-color-gray-800)};
         }
 
         &::part(base) {
+          background-color: $color-input;
           transition: all 0.3s;
           font-weight: 700;
+          color: $color-text;
         }
 
         &::part(checked-icon) {

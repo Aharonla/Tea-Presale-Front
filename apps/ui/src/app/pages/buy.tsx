@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SlCard, SlSelect, SlOption, SlIcon, SlButton } from '@shoelace-style/shoelace/dist/react';
+import { SlCard, SlSelect, SlOption, SlIcon, SlButton, SlAlert } from '@shoelace-style/shoelace/dist/react';
 import { useMetaMaskContext } from '../context/metamask.context';
 import tetherIcon from '../../assets/icons/tether.svg';
 import usdcIcon from '../../assets/icons/usd-coin-usdc-logo.svg';
@@ -9,6 +9,8 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
+import { enterPersale, getTokenAllowance, setTokenApprove } from '../utils/presale';
+import { PRESALE_CONTRACT_ADDRESS, USDC } from '../utils/constants';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth' },
@@ -19,11 +21,15 @@ export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ['usdc', 'usdt'];
 export const Buy = () => {
   const lastInputTouched = useRef<'tea' | 'coin' | null>(null);
+  const eventModalRef = useRef<any>(null);
   const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdc');
   const [amount, setAmount] = useState<number>();
   const [amountInTea, setAmountInTea] = useState<number>();
-  const { balance } = useMetaMaskContext();
+  const [eventTitle, setEventTitle] = useState<string>('');
+  const [eventType, setEventType] = useState<string>('primary');
+  const { balance, account } = useMetaMaskContext();
   const { convertCoin, coinValuation } = useCoin();
+  const [tokenAllowance, setAllowance] = useState<number>(0);
 
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
@@ -48,8 +54,83 @@ export const Buy = () => {
     updateValueOfLastTouchedInput();
   }, [updateValueOfLastTouchedInput]);
 
+  const getAllowance = async () => {
+    if (account) {
+      const allowance = await getTokenAllowance(USDC, account, PRESALE_CONTRACT_ADDRESS);
+      setAllowance(Number(allowance));
+      return Number(allowance);
+    } else {
+      return 0;
+    }
+  };
+
+  useEffect(() => {
+    getAllowance();
+  }, [getAllowance]);
+
+  const handleContractResponse = (response: any) => {
+    if (response.status === 'SUCCESS') {
+      setEventTitle('Transaction approved!');
+      setEventType('success');
+    } else {
+      setEventTitle(response.message);
+      setEventType('error');
+    }
+    eventModalRef.current?.show();
+  };
+
+  const handleApprove = async () => {
+    try {
+      if (!amount) {
+        return;
+      }
+      setEventTitle('Waiting for transaction approval...');
+      eventModalRef.current?.show();
+      const res = await setTokenApprove(USDC, PRESALE_CONTRACT_ADDRESS, amount);
+      handleContractResponse(res);
+    } catch (err: any) {
+      setEventType('error');
+      setEventTitle(err.message);
+      eventModalRef.current?.show();
+    }
+  };
+  const enterPresale = async () => {
+    try {
+      if (!amount) {
+        return;
+      }
+      setEventTitle('Waiting for transaction approval...');
+      eventModalRef.current?.show();
+      const res = await enterPersale(amount, 1);
+      handleContractResponse(res);
+      eventModalRef.current?.show();
+    } catch (err: any) {
+      setEventType('error');
+      setEventTitle(err.message);
+      eventModalRef.current?.show();
+    }
+  };
+
+  const handleBuyButtonAction = async () => {
+    // will check approvance
+    if (account && amount !== undefined) {
+      const allowance = await getAllowance();
+      if (Number(allowance) < amount) {
+        await handleApprove();
+      } else {
+        await enterPresale();
+      }
+    }
+  };
+
   return (
     <div className="buy page">
+      <SlAlert variant="primary" duration={3000} ref={eventModalRef} className="alert">
+        {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
+        {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
+        {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
+        {eventTitle}
+      </SlAlert>
       <TokenRate />
       <SlCard className="card">
         <SlCard className="card__inner">
@@ -104,8 +185,8 @@ export const Buy = () => {
           </div>
         </SlCard>
       </SlCard>
-      <SlButton disabled={buyButtonDisabled} variant="primary" className="buy__btn">
-        BUY TEA
+      <SlButton onClick={handleBuyButtonAction} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
+        {tokenAllowance >= (amount || 0) ? 'BUY TEA' : 'Approve'}
       </SlButton>
     </div>
   );

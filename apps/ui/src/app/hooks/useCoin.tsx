@@ -6,6 +6,7 @@ export const useCoin = () => {
   const [coinValuation] = useState<Record<CoinType, null | number>>({
     eth: 4001,
     usdt: 1,
+    usdc: 1,
   });
   const convertCoin = useCallback(
     (value = 0, toTea: boolean, selectedCoin: CoinType): number | undefined => {
