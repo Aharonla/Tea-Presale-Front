@@ -1,4 +1,4 @@
-import { BrowserProvider, Contract, Eip1193Provider, ethers, parseUnits } from 'ethers';
+import { BrowserProvider, Contract, Eip1193Provider, ethers, formatUnits, parseUnits } from 'ethers';
 import { ERC20_ABI } from './erc20_abi';
 import { PRESALE_ABI } from './presale_abi';
 import { PRESALE_CONTRACT_ADDRESS, USDC } from './constants';
@@ -65,4 +65,13 @@ export async function enterPersale(value: number, referral: number) {
       };
     }
   }
+}
+
+export async function getPresaleRoundEnd() {
+  // updated provider with custom url for better testnet experience
+  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const usdtErc20Contract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
+  const roundInfo = await usdtErc20Contract.getRoundEnd();
+  const formatted = ethers.FixedNumber.fromValue(roundInfo);
+  return Number(formatted._value);
 }

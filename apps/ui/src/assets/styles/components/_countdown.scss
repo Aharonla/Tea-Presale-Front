@@ -3,6 +3,15 @@
   $delay-opacity: 0.2s;
   $duration-opacity: 0.3s;
   $duration-max-height: 0.35s;
+  border: none;
+
+  &::part(base) {
+    background-color: $color-primary;
+    border: none;
+    border-radius: 0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
 
   &[data-hidden='false'] {
     opacity: 1;
@@ -62,6 +71,7 @@
       color: $color-text-secondary;
       border: 1px solid $color-border;
       border-radius: 4px;
+      border-color: $color-brand;
       display: block;
       box-shadow: inset 0 -1px 3px fade-out($color-border, 0.5);
     }
@@ -74,7 +84,7 @@
   }
 
   &.done {
-    $faded-color-red: #ff4d4f;
+    $faded-color-red: #ff5733;
 
     .countdown__title {
       > span {

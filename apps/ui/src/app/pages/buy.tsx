@@ -131,7 +131,9 @@ export const Buy = () => {
         {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
         {eventTitle}
       </SlAlert>
+      <Countdown />
       <TokenRate />
+
       <SlCard className="card">
         <SlCard className="card__inner">
           <SlSelect
