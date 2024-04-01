@@ -1,0 +1,37 @@
+.contract-info {
+  border: none;
+  background-color: $color-primary;
+  padding-inline: 20px;
+  display: block;
+  justify-content: flex-start;
+
+  .progress {
+    display: block;
+    justify-content: flex-start;
+
+    &__info {
+      display: flex;
+      justify-content: space-between;
+      // align-self: flex-start;
+      // align-content: flex-start;
+      // color: $color-text-trinary;
+      .title {
+        color: $color-text-trinary;
+      }
+    }
+    &__bar {
+      &::part(indicator) {
+        background-color: $color-brand;
+      }
+      &::part(label) {
+        color: black;
+        font-weight: 700;
+      }
+      &::part(base) {
+        flex-wrap: wrap-reverse;
+        border-radius: 5px;
+        background-color: $color-input;
+      }
+    }
+  }
+}

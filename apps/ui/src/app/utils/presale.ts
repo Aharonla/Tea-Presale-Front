@@ -76,7 +76,7 @@ export async function getPresaleRoundEnd() {
   return Number(formatted._value);
 }
 
-export async function getRoundPrice() {
+export async function getPresaleRoundPrice() {
   // updated provider with custom url for better testnet experience
   const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
@@ -85,4 +85,25 @@ export async function getRoundPrice() {
   const formattedPrice = ethers.FixedNumber.fromValue(roundPrice);
   const formattedPercentage = ethers.FixedNumber.fromValue(roundPercentageRate);
   return Number(formattedPrice) / Number(formattedPercentage);
+}
+
+export async function getPresaleRoundInfo() {
+  try {
+    // updated provider with custom url for better testnet experience
+    const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+    const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
+    const roundSize = await presaleContract.getRoundSize();
+    const roundSold = await presaleContract.getRoundSold();
+    const roundDecimal = await presaleContract.decimals();
+
+    return {
+      roundSize: Number(ethers.formatUnits(roundSize, roundDecimal).split('.')[0]),
+      roundSold: Number(ethers.formatUnits(roundSold, roundDecimal).split('.')[0]),
+    };
+  } catch (err) {
+    return {
+      roundSize: 0,
+      roundSold: 0,
+    };
+  }
 }

@@ -2,6 +2,7 @@
   display: grid;
   width: 600px;
   margin-inline: auto;
+  padding-bottom: 100px;
   .alert {
     &::part(base) {
       background-color: $color-primary;

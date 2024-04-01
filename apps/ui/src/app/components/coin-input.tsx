@@ -1,13 +1,12 @@
-import React from 'react';
 import { SlInput } from '@shoelace-style/shoelace/dist/react';
 import { ComponentProps } from 'react';
 
 type Props = {
   onChangeValue: (amount: number) => void;
-  decimals: 9 | 18;
-} & ComponentProps<typeof SlInput>
+  decimals: number;
+} & ComponentProps<typeof SlInput>;
 export const CoinInput = ({ valueAsNumber, onChangeValue, decimals, ...props }: Props) => {
-  const formattedValueAsNumber = +(Number(valueAsNumber).toFixed(decimals));
+  const formattedValueAsNumber = +Number(valueAsNumber).toFixed(decimals);
   return (
     <SlInput
       className="amount__input"

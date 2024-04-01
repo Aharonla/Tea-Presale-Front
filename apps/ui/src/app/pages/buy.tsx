@@ -9,9 +9,10 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { enterPresaleUtil, getRoundPrice, getTokenAllowance, setTokenApprove } from '../utils/presale';
+import { enterPresaleUtil, getPresaleRoundInfo, getPresaleRoundPrice, setTokenApprove } from '../utils/presale';
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
+import ContractInfo from '../components/contract-info';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
@@ -32,6 +33,16 @@ export const Buy = () => {
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [contractInfo, setContractInfo] = useState<{
+    roundSold: null | number;
+    roundSize: null | number;
+  }>({
+    roundSold: null,
+    roundSize: null,
+  });
+  const remainingTea = useRef(0);
+
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
       setAmount(() => convertCoin(amountInTea, false, selectedCoin));
@@ -57,9 +68,15 @@ export const Buy = () => {
 
   useEffect(() => {
     const getTokenPrice = async () => {
-      const price = await getRoundPrice();
+      const price = await getPresaleRoundPrice();
       setTokenPrice(price);
     };
+    const getInfo = async () => {
+      const result = await getPresaleRoundInfo();
+      setContractInfo(result);
+      remainingTea.current = result.roundSize - result.roundSold;
+    };
+    getInfo();
     getTokenPrice();
   }, []);
 
@@ -108,8 +125,12 @@ export const Buy = () => {
 
   const enterPresale = async () => {
     try {
-      if (!amount || !paymentAssets[selectedCoin]?.decimal) {
+      if (!amount || !amountInTea || !paymentAssets[selectedCoin]?.decimal) {
         return;
+      }
+      // having issues with forcing input of shoelace library
+      if (amountInTea > remainingTea.current) {
+        setAmount(convertCoin(remainingTea.current, false, selectedCoin));
       }
       setSubmitting(true);
       const approveResult = await handleApprove();
@@ -122,6 +143,7 @@ export const Buy = () => {
       const res = await enterPresaleUtil(amount, paymentAssets[selectedCoin]?.decimal, 1);
       handleContractResponse(res);
       eventModalRef.current?.show();
+      setSubmitting(false);
     } catch (err: any) {
       setEventType('error');
       setEventTitle(err.message);
@@ -142,6 +164,7 @@ export const Buy = () => {
 
     initializeProvider();
   }, []);
+
   return (
     <div className="buy page">
       <SlAlert variant="primary" duration={3000} ref={eventModalRef} className="alert">
@@ -153,7 +176,7 @@ export const Buy = () => {
 
       <Countdown />
       {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}
-
+      <ContractInfo info={contractInfo} />
       <SlCard className="card">
         <SlCard className="card__inner">
           <SlSelect
@@ -180,7 +203,7 @@ export const Buy = () => {
             <CoinInput
               disabled={tokenPrice === 0}
               valueAsNumber={amount}
-              decimals={18}
+              decimals={Number(paymentAssets[selectedCoin]?.decimal) || 18}
               onChangeValue={(value) => {
                 lastInputTouched.current = 'coin';
                 setAmount(value);

@@ -189,7 +189,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         connect,
         disconnect,
         paymentAssets: {
-          eth: { balance: balanceUSDT, decimal: '18' },
+          eth: { balance: balanceETH, decimal: '18' },
           usdt: { balance: balanceUSDT, decimal: deciammlUSDT },
           usdc: { balance: balanceUSDC, decimal: deciammlUSDC },
         },
