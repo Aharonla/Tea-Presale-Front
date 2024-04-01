@@ -11,6 +11,7 @@ import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
 import { enterPresaleUtil, getRoundPrice, getTokenAllowance, setTokenApprove } from '../utils/presale';
 import { USDC, USDT } from '../utils/constants';
+import Spinner from '../components/spinner';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
@@ -209,7 +210,7 @@ export const Buy = () => {
         </SlCard>
       </SlCard>
       <SlButton onClick={enterPresale} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
-        {submitting ? 'submitting' : 'BUY TEA'}
+        {submitting ? <Spinner /> : 'BUY TEA'}
       </SlButton>
     </div>
   );
