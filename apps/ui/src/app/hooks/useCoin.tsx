@@ -4,7 +4,7 @@ interface coinProps {
   tokenPrice: number;
 }
 export const useCoin = ({ tokenPrice }: coinProps) => {
-  const tokenRate = useRef(tokenPrice ? 1 / tokenPrice : 0);
+  const tokenRate = tokenPrice ? 1 / tokenPrice : 0;
 
   const [coinValuation] = useState<Record<CoinType, null | number>>({
     eth: 4001,
@@ -16,12 +16,11 @@ export const useCoin = ({ tokenPrice }: coinProps) => {
       if (coinValuation[selectedCoin] === null) return;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const conversionRate = coinValuation[selectedCoin]! * tokenRate.current;
-
+      const conversionRate = coinValuation[selectedCoin]! * tokenRate;
       return toTea ? value * conversionRate : value / conversionRate;
     },
-    [coinValuation]
+    [coinValuation, tokenRate]
   );
 
-  return { convertCoin, coinValuation, tokenRate: tokenRate.current };
+  return { convertCoin, coinValuation, tokenRate: tokenRate };
 };

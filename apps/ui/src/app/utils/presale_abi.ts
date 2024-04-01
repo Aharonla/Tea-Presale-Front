@@ -117,6 +117,12 @@ export const PRESALE_ABI = [
   },
   {
     anonymous: false,
+    inputs: [{ indexed: true, internalType: 'address', name: 'token', type: 'address' }],
+    name: 'RemovePaymentToken',
+    type: 'event',
+  },
+  {
+    anonymous: false,
     inputs: [{ indexed: true, internalType: 'uint8', name: 'round', type: 'uint8' }],
     name: 'RoundStarted',
     type: 'event',
@@ -157,6 +163,13 @@ export const PRESALE_ABI = [
     ],
     name: 'Withdraw',
     type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'PERCENTAGE_RATE',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
@@ -281,20 +294,27 @@ export const PRESALE_ABI = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'contract ERC20', name: '', type: 'address' }],
+    inputs: [{ internalType: 'contract ERC20', name: 'token', type: 'address' }],
     name: 'paymentTokens',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    outputs: [{ internalType: 'bool', name: 'allowed', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+    inputs: [{ internalType: 'uint8', name: 'referralId', type: 'uint8' }],
     name: 'referrals',
     outputs: [
       { internalType: 'uint256', name: 'amountSold', type: 'uint256' },
       { internalType: 'uint256', name: 'numOfReferrals', type: 'uint256' },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
+    name: 'removePaymentToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   { inputs: [], name: 'renounceOwnership', outputs: [], stateMutability: 'nonpayable', type: 'function' },

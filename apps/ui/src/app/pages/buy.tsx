@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SlCard, SlSelect, SlOption, SlIcon, SlButton, SlAlert } from '@shoelace-style/shoelace/dist/react';
 import { useMetaMaskContext } from '../context/metamask.context';
 import tetherIcon from '../../assets/icons/tether.svg';
@@ -9,13 +9,13 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { enterPersale, getRoundPrice, getTokenAllowance, setTokenApprove } from '../utils/presale';
-import { PRESALE_CONTRACT_ADDRESS, USDC } from '../utils/constants';
+import { enterPresaleUtil, getRoundPrice, getTokenAllowance, setTokenApprove } from '../utils/presale';
+import { USDC, USDT } from '../utils/constants';
 
 const mappedCoins = {
-  eth: { icon: ethereumIcon, label: 'ETH', value: 'eth' },
-  usdt: { icon: tetherIcon, label: 'USDT', value: 'usdt' },
-  usdc: { icon: usdcIcon, label: 'USDC', value: 'usdc' },
+  eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
+  usdt: { icon: tetherIcon, label: 'USDT', value: 'usdt', contract: USDT },
+  usdc: { icon: usdcIcon, label: 'USDC', value: 'usdc', contract: USDC },
 };
 export type CoinType = keyof typeof mappedCoins;
 const coins: CoinType[] = ['usdc', 'usdt'];
@@ -27,11 +27,10 @@ export const Buy = () => {
   const [amountInTea, setAmountInTea] = useState<number>();
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventType, setEventType] = useState<string>('primary');
-  const { balance, account } = useMetaMaskContext();
+  const { paymentAssets, account } = useMetaMaskContext();
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
-  const [tokenAllowance, setAllowance] = useState<number>(0);
-
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
       setAmount(() => convertCoin(amountInTea, false, selectedCoin));
@@ -41,42 +40,27 @@ export const Buy = () => {
   }, [amount, amountInTea, convertCoin, selectedCoin]);
 
   const formattedBalance = useMemo(() => {
-    if (balance[selectedCoin] === null) {
+    if (!paymentAssets[selectedCoin]?.balance) {
       return '--';
     }
-    return `Balance: ${balance[selectedCoin]} ${mappedCoins[selectedCoin]?.label}`;
-  }, [balance, selectedCoin]);
+    return `Balance: ${paymentAssets[selectedCoin].balance} ${mappedCoins[selectedCoin]?.label}`;
+  }, [paymentAssets, selectedCoin]);
 
   const buyButtonDisabled = useMemo(() => {
-    return !amount || balance[selectedCoin] === null || coinValuation[selectedCoin] === null;
-  }, [amount, balance, coinValuation, selectedCoin]);
+    return !amount || paymentAssets[selectedCoin] === null || coinValuation[selectedCoin] === null || submitting;
+  }, [amount, paymentAssets, coinValuation, selectedCoin, submitting]);
 
   useEffect(() => {
     updateValueOfLastTouchedInput();
   }, [updateValueOfLastTouchedInput]);
 
-  const getAllowance = async () => {
-    if (account) {
-      const allowance = await getTokenAllowance(USDC, account, PRESALE_CONTRACT_ADDRESS);
-      setAllowance(Number(allowance));
-      return Number(allowance);
-    } else {
-      return 0;
-    }
-  };
-
   useEffect(() => {
     const getTokenPrice = async () => {
-      if (account) {
-        const price = await getRoundPrice();
-        setTokenPrice(price);
-      } else {
-        return 0;
-      }
+      const price = await getRoundPrice();
+      setTokenPrice(price);
     };
     getTokenPrice();
-    getAllowance();
-  }, [getAllowance]);
+  }, []);
 
   const handleContractResponse = (response: any) => {
     if (response.status === 'SUCCESS') {
@@ -88,51 +72,75 @@ export const Buy = () => {
     }
     eventModalRef.current?.show();
   };
-
   const handleApprove = async () => {
     try {
-      if (!amount) {
+      if (!amount || !paymentAssets[selectedCoin]?.decimal) {
         return;
       }
       setEventTitle('Waiting for transaction approval...');
       eventModalRef.current?.show();
-      const res = await setTokenApprove(USDC, PRESALE_CONTRACT_ADDRESS, amount);
-      handleContractResponse(res);
+      const res1 = await setTokenApprove(mappedCoins[selectedCoin].contract, 0, paymentAssets[selectedCoin]?.decimal);
+      handleContractResponse(res1);
+      if (res1.status === 'FAILURE') {
+        setSubmitting(false);
+        return false;
+      }
+      const res2 = await setTokenApprove(
+        mappedCoins[selectedCoin].contract,
+        amount,
+        paymentAssets[selectedCoin]?.decimal
+      );
+      handleContractResponse(res2);
+      if (res2.status === 'FAILURE') {
+        setSubmitting(false);
+        return false;
+      }
+      return true;
     } catch (err: any) {
       setEventType('error');
       setEventTitle(err.message);
       eventModalRef.current?.show();
+      setSubmitting(false);
+      return false;
     }
   };
+
   const enterPresale = async () => {
     try {
-      if (!amount) {
+      if (!amount || !paymentAssets[selectedCoin]?.decimal) {
+        return;
+      }
+      setSubmitting(true);
+      const approveResult = await handleApprove();
+      if (!approveResult) {
+        setSubmitting(false);
         return;
       }
       setEventTitle('Waiting for transaction approval...');
       eventModalRef.current?.show();
-      const res = await enterPersale(amount, 1);
+      const res = await enterPresaleUtil(amount, paymentAssets[selectedCoin]?.decimal, 1);
       handleContractResponse(res);
       eventModalRef.current?.show();
     } catch (err: any) {
       setEventType('error');
       setEventTitle(err.message);
       eventModalRef.current?.show();
+      setSubmitting(false);
     }
   };
-
-  const handleBuyButtonAction = async () => {
-    // will check approvance
-    if (account && amount !== undefined) {
-      const allowance = await getAllowance();
-      if (Number(allowance) < amount) {
-        await handleApprove();
-      } else {
-        await enterPresale();
+  const enterPresale2 = async () => {
+    setSubmitting(false);
+  };
+  // for fixing issue of ethers-js can't get singer from provider!
+  useEffect(() => {
+    const initializeProvider = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
       }
-    }
-  };
+    };
 
+    initializeProvider();
+  }, []);
   return (
     <div className="buy page">
       <SlAlert variant="primary" duration={3000} ref={eventModalRef} className="alert">
@@ -141,6 +149,7 @@ export const Buy = () => {
         {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
         {eventTitle}
       </SlAlert>
+
       <Countdown />
       {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}
 
@@ -199,8 +208,8 @@ export const Buy = () => {
           </div>
         </SlCard>
       </SlCard>
-      <SlButton onClick={handleBuyButtonAction} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
-        {tokenAllowance >= (amount || 0) ? 'BUY TEA' : 'Approve'}
+      <SlButton onClick={enterPresale} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
+        {submitting ? 'submitting' : 'BUY TEA'}
       </SlButton>
     </div>
   );

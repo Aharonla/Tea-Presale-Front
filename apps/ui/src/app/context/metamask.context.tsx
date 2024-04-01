@@ -25,7 +25,13 @@ export interface MetaMaskContext {
   status: MetaMaskStatus;
   connect: () => void;
   disconnect: () => void;
-  balance: Record<CoinType, null | string>;
+  paymentAssets: Record<
+    CoinType,
+    null | {
+      balance: null | string;
+      decimal: null | string;
+    }
+  >;
 }
 
 const METAMASK_ACCOUNT_LOCALSTORAGE_KEY = 'metamask_account';
@@ -43,6 +49,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
   const [balanceETH, setBalanceETH] = useState<string | null>(null);
   const [balanceUSDT, setBalanceUSDT] = useState<string | null>(null);
   const [balanceUSDC, setBalanceUSDC] = useState<string | null>(null);
+  const [deciammlUSDT, setDecimalUSDT] = useState<string | null>(null);
+  const [deciammlUSDC, setDecimalUSDC] = useState<string | null>(null);
 
   function initSDK(): MetaMaskSDK {
     return new MetaMaskSDK({
@@ -71,8 +79,13 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         params: [address, block],
       })) as string;
 
-      // const usdtBalance = await getFormattedBalanceOfErc20TokenHolder(USDT, address);
-      const usdcBalance = await getFormattedBalanceOfErc20TokenHolder(USDC, address);
+      const usdtDecimal = await getFormattedDecimalOfErc20TokenHolder(USDT, address);
+      const usdtBalance = await getFormattedBalanceOfErc20TokenHolder(USDT, address, usdtDecimal);
+      const usdcDecimal = await getFormattedDecimalOfErc20TokenHolder(USDT, address);
+      const usdcBalance = await getFormattedBalanceOfErc20TokenHolder(USDC, address, usdcDecimal);
+
+      setDecimalUSDC(usdcDecimal);
+      setDecimalUSDT(usdtDecimal);
 
       if (balance === '0x') {
         setBalanceETH('0');
@@ -80,7 +93,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
       }
       setBalanceETH(ethers.formatUnits(balance));
 
-      // setBalanceUSDT(usdtBalance);  // removed in testnet
+      setBalanceUSDT(usdtBalance);
       setBalanceUSDC(usdcBalance);
     } catch (err) {
       console.error('==>', err);
@@ -123,13 +136,21 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
     setValues((values) => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
   }, []);
 
-  async function getFormattedBalanceOfErc20TokenHolder(contractAddress: string, address: string) {
+  async function getFormattedDecimalOfErc20TokenHolder(contractAddress: string, address: string) {
+    // updated provider with custom url for better testnet experience
+    const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+    const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, provider);
+    const numDecimals = await usdtErc20Contract.decimals();
+
+    return numDecimals;
+  }
+
+  async function getFormattedBalanceOfErc20TokenHolder(contractAddress: string, address: string, numDecimals: number) {
     // updated provider with custom url for better testnet experience
     const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
     const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, provider);
 
     const balance = await usdtErc20Contract.balanceOf(address);
-    const numDecimals = await usdtErc20Contract.decimals();
 
     return ethers.formatUnits(balance, numDecimals);
   }
@@ -167,10 +188,10 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         ...values,
         connect,
         disconnect,
-        balance: {
-          eth: balanceETH,
-          usdt: balanceUSDT,
-          usdc: balanceUSDC,
+        paymentAssets: {
+          eth: { balance: balanceUSDT, decimal: '18' },
+          usdt: { balance: balanceUSDT, decimal: deciammlUSDT },
+          usdc: { balance: balanceUSDC, decimal: deciammlUSDC },
         },
       }}
       children={children}
