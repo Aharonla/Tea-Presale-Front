@@ -59,8 +59,16 @@ export const Buy = () => {
   }, [paymentAssets, selectedCoin]);
 
   const buyButtonDisabled = useMemo(() => {
-    return !amount || paymentAssets[selectedCoin] === null || coinValuation[selectedCoin] === null || submitting;
-  }, [amount, paymentAssets, coinValuation, selectedCoin, submitting]);
+    return (
+      !amount ||
+      !amountInTea ||
+      paymentAssets[selectedCoin] === null ||
+      coinValuation[selectedCoin] === null ||
+      submitting ||
+      amountInTea > remainingTea.current ||
+      amount > Number(paymentAssets[selectedCoin].balance)
+    );
+  }, [amount, paymentAssets, coinValuation, selectedCoin, amountInTea, submitting, remainingTea]);
 
   useEffect(() => {
     updateValueOfLastTouchedInput();
@@ -128,10 +136,6 @@ export const Buy = () => {
       if (!amount || !amountInTea || !paymentAssets[selectedCoin]?.decimal) {
         return;
       }
-      // having issues with forcing input of shoelace library
-      if (amountInTea > remainingTea.current) {
-        setAmount(convertCoin(remainingTea.current, false, selectedCoin));
-      }
       setSubmitting(true);
       const approveResult = await handleApprove();
       if (!approveResult) {
@@ -151,9 +155,7 @@ export const Buy = () => {
       setSubmitting(false);
     }
   };
-  const enterPresale2 = async () => {
-    setSubmitting(false);
-  };
+
   // for fixing issue of ethers-js can't get singer from provider!
   useEffect(() => {
     const initializeProvider = async () => {
@@ -219,6 +221,8 @@ export const Buy = () => {
             <SlOption value="tea">TEA</SlOption>
           </SlSelect>
           <div className="amount">
+            <small className="amount__balance">Available: {remainingTea.current} TEA</small>
+
             <CoinInput
               disabled={tokenPrice === 0}
               valueAsNumber={amountInTea}

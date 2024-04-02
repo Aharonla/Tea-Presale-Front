@@ -95,10 +95,9 @@ export async function getPresaleRoundInfo() {
     const roundSize = await presaleContract.getRoundSize();
     const roundSold = await presaleContract.getRoundSold();
     const roundDecimal = await presaleContract.decimals();
-
     return {
-      roundSize: Number(ethers.formatUnits(roundSize, roundDecimal).split('.')[0]),
-      roundSold: Number(ethers.formatUnits(roundSold, roundDecimal).split('.')[0]),
+      roundSize: Number(ethers.formatUnits(roundSize, roundDecimal)),
+      roundSold: Number(ethers.formatUnits(roundSold, roundDecimal)),
     };
   } catch (err) {
     return {
