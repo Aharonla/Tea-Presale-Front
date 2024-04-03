@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Wallet } from './wallet';
-import teaSwap from '../../assets/icons/tea-swap.svg';
+import teaSwap from '../../assets/icons/tea-new.svg';
 
 export const TopBar = () => {
   return (
