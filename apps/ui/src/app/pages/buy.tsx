@@ -96,21 +96,26 @@ export const Buy = () => {
       setEventTitle(response.message);
       setEventType('error');
     }
-    eventModalRef.current?.show();
   };
   const handleApprove = async () => {
     try {
       if (!amount || !paymentAssets[selectedCoin]?.decimal) {
         return;
       }
-      setEventTitle('Waiting for transaction approval...');
+      setEventType('primary');
+      setEventTitle('Waiting for transaction 1/3 approval...');
       eventModalRef.current?.show();
       const res1 = await setTokenApprove(mappedCoins[selectedCoin].contract, 0, paymentAssets[selectedCoin]?.decimal);
       handleContractResponse(res1);
       if (res1.status === 'FAILURE') {
         setSubmitting(false);
+        setTimeout(() => {
+          eventModalRef.current?.hide();
+        }, 1000);
         return false;
       }
+      setEventType('primary');
+      setEventTitle('Waiting for transaction 2/3 approval...');
       const res2 = await setTokenApprove(
         mappedCoins[selectedCoin].contract,
         amount,
@@ -119,6 +124,9 @@ export const Buy = () => {
       handleContractResponse(res2);
       if (res2.status === 'FAILURE') {
         setSubmitting(false);
+        setTimeout(() => {
+          eventModalRef.current?.hide();
+        }, 1000);
         return false;
       }
       return true;
@@ -142,12 +150,15 @@ export const Buy = () => {
         setSubmitting(false);
         return;
       }
-      setEventTitle('Waiting for transaction approval...');
+      setEventType('primary');
+      setEventTitle('Waiting for transaction 3/3 approval...');
       eventModalRef.current?.show();
-      const res = await enterPresaleUtil(amount, paymentAssets[selectedCoin]?.decimal, 1);
+      const res = await enterPresaleUtil(amountInTea, 1, mappedCoins[selectedCoin].contract);
       handleContractResponse(res);
-      eventModalRef.current?.show();
       setSubmitting(false);
+      setTimeout(() => {
+        eventModalRef.current?.hide();
+      }, 1000);
     } catch (err: any) {
       setEventType('error');
       setEventTitle(err.message);
@@ -169,7 +180,7 @@ export const Buy = () => {
 
   return (
     <div className="buy page">
-      <SlAlert variant="primary" duration={3000} ref={eventModalRef} className="alert">
+      <SlAlert variant="primary" ref={eventModalRef} className="alert">
         {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
         {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
         {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}

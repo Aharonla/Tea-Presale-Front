@@ -33,14 +33,15 @@ export async function setTokenApprove(tokenAddress: string, value: number, decim
   }
 }
 
-export async function enterPresaleUtil(value: number, decimals: string, referral: number) {
+export async function enterPresaleUtil(value: number, referral: number, token: string) {
   try {
     // updated provider with custom url for better testnet experience
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     const signer = await provider.getSigner();
     const contract = new Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
+    const decimals = await contract.decimals();
     const amount = parseUnits(String(value), decimals);
-    const tx = await contract.buyTokens(amount, referral, USDC);
+    const tx = await contract.buyTokens(amount, referral, token);
     await tx.wait();
     return {
       status: 'SUCCESS',
