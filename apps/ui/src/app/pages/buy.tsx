@@ -9,7 +9,7 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { enterPresaleUtil, getPresaleRoundInfo, getPresaleRoundPrice, setTokenApprove } from '../utils/presale';
+import { enterPresaleUtil, getPresaleRoundSold, getPresaleRoundPrice, setTokenApprove } from '../utils/presale';
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
@@ -80,7 +80,7 @@ export const Buy = () => {
       setTokenPrice(price);
     };
     const getInfo = async () => {
-      const result = await getPresaleRoundInfo();
+      const result = await getPresaleRoundSold();
       setContractInfo(result);
       remainingTea.current = result.roundSize - result.roundSold;
     };
@@ -236,7 +236,7 @@ export const Buy = () => {
             <SlOption value="tea">TEA</SlOption>
           </SlSelect>
           <div className="amount">
-            <small className="amount__balance">Available: {remainingTea.current} TEA</small>
+            <small className="amount__balance">Available: {remainingTea.current.toFixed(4)} TEA</small>
 
             <CoinInput
               disabled={tokenPrice === 0}
