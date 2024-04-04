@@ -153,7 +153,11 @@ export const Buy = () => {
       setEventType('primary');
       setEventTitle('Waiting for transaction 3/3 approval...');
       eventModalRef.current?.show();
-      const res = await enterPresaleUtil(amountInTea, 1, mappedCoins[selectedCoin].contract);
+      const res = await enterPresaleUtil(
+        amountInTea,
+        Number(window.localStorage.getItem('referral')),
+        mappedCoins[selectedCoin].contract
+      );
       handleContractResponse(res);
       setSubmitting(false);
       setTimeout(() => {
