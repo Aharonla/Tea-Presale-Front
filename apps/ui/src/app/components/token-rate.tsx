@@ -17,7 +17,7 @@ export const TokenRate = ({ tokenPrice }: coinProps) => {
         value={tokenPrice}
         type="currency"
         currency="USD"
-        minimumFractionDigits={4}
+        maximumFractionDigits={4}
       />
     </SlCard>
   );
