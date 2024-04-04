@@ -93,8 +93,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
       }
       setBalanceETH(ethers.formatUnits(balance));
 
-      setBalanceUSDT(usdtBalance?.toFixed(4));
-      setBalanceUSDC(usdcBalance?.toFixed(4));
+      setBalanceUSDT(usdtBalance?.toLocaleString('en-US', { maximumFractionDigits: 4 }));
+      setBalanceUSDC(usdcBalance?.toLocaleString('en-US', { maximumFractionDigits: 4 }));
     } catch (err) {
       console.error('==>', err);
     }
