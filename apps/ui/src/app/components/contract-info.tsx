@@ -12,14 +12,14 @@ const ContractInfo = ({ info }: IContractInfo) => {
     <div className="contract-info ">
       <div className="progress">
         <div className="progress__info">
-          <p className="title">Round Total Sold</p>
-          <p className="title">
-            {info?.roundSold}/{info?.roundSize}
-          </p>
+          <p className="title">Available</p>
+          {info.roundSize && info.roundSold ? (
+            <p className="title">{info?.roundSize - info?.roundSold} TEA</p>
+          ) : (
+            <p className="title">--</p>
+          )}
         </div>
-        <SlProgressBar indeterminate={info.roundSize === 0} className="progress__bar" value={Number(value)}>
-          {value}%
-        </SlProgressBar>
+        <SlProgressBar indeterminate={info.roundSize === 0} className="progress__bar" value={Number(value)} />
       </div>
     </div>
   );
