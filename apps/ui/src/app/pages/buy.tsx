@@ -11,11 +11,13 @@ import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
 import {
   enterPresaleUtil,
+  getPresaleRoundSold,
   getPresaleRoundInfo,
   getPresaleRoundPrice,
   getPresaleUserBalance,
   setTokenApprove,
 } from '../utils/presale';
+
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
@@ -87,7 +89,7 @@ export const Buy = () => {
       setTokenPrice(price);
     };
     const getInfo = async () => {
-      const result = await getPresaleRoundInfo();
+      const result = await getPresaleRoundSold();
       setContractInfo(result);
       remainingTea.current = result.roundSize - result.roundSold;
     };
@@ -249,6 +251,7 @@ export const Buy = () => {
             <small className="amount__balance">
               Amount Purchased: {userTeaPurchased.current.toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
             </small>
+
 
             <CoinInput
               disabled={tokenPrice === 0}

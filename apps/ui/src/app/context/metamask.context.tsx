@@ -93,8 +93,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
       }
       setBalanceETH(ethers.formatUnits(balance));
 
-      setBalanceUSDT(usdtBalance);
-      setBalanceUSDC(usdcBalance);
+      setBalanceUSDT(usdtBalance?.toLocaleString('en-US', { maximumFractionDigits: 4 }));
+      setBalanceUSDC(usdcBalance?.toLocaleString('en-US', { maximumFractionDigits: 4 }));
     } catch (err) {
       console.error('==>', err);
     }
@@ -152,7 +152,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
 
     const balance = await usdtErc20Contract.balanceOf(address);
 
-    return ethers.formatUnits(balance, numDecimals);
+    return Number(ethers.formatUnits(balance, numDecimals));
   }
 
   const initAccountsListener = useCallback(() => {
