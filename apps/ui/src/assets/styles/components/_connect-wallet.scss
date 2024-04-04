@@ -3,8 +3,6 @@
   margin-left: auto;
 
   .popup {
-    --item-row-count: 2;
-    --gap: 0.5em;
     --card-width: 150px;
     --auto-size-available-width: calc(
       var(--card-width) * var(--item-row-count) + (var(--gap) * 1.5) * (var(--item-row-count) - 1) + 1em

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { SlButton, SlPopup } from '@shoelace-style/shoelace/dist/react';
-import walletConnectLogo from '../../assets/icons/walletconnect.svg';
 import { ConnectMetamask } from './connect-metamask';
 export const ConnectWallet = () => {
   const anchorRef = React.useRef(null);
   const [walletConnectDialog, setWalletConnectDialog] = React.useState(false);
 
   function toggleWalletConnectDialog() {
-    setWalletConnectDialog(prev => !prev);
+    setWalletConnectDialog((prev) => !prev);
   }
 
   useEffect(() => {
@@ -39,14 +38,6 @@ export const ConnectWallet = () => {
         ref={anchorRef}
       >
         <div className="popup__content">
-          <SlButton
-            disabled
-            variant="default"
-            className='connect-wallet__button'
-          >
-            <img src={walletConnectLogo} alt="Metamask" />
-            <span>WalletConnect</span>
-          </SlButton>
           <ConnectMetamask />
         </div>
         <SlButton
@@ -62,4 +53,3 @@ export const ConnectWallet = () => {
     </div>
   );
 };
-
