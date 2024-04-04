@@ -24,6 +24,11 @@
 
       &::part(input) {
         font-size: 0.8em;
+        color: $color-text;
+      }
+      &::part(base) {
+        background-color: $color-input;
+        border: none;
       }
     }
   }
@@ -50,6 +55,10 @@
     &__actions {
       display: flex;
       gap: 0.5em;
+      &::part(base) {
+        background-color: $color-brand;
+        color: black;
+      }
     }
   }
 }
