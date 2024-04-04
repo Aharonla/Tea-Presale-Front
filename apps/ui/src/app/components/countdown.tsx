@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SlCard } from '@shoelace-style/shoelace/dist/react';
-import { env } from '../utils/env';
+import { getPresaleRoundEnd } from '../utils/presale';
 
 export const Countdown = () => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
@@ -10,9 +10,8 @@ export const Countdown = () => {
   useEffect(() => {
     let interval: NodeJS.Timer;
     const getTokenCountdown = async () => {
-      const response = await fetch(`${env.API_URL}/rounds`);
-      const { data } = await response.json();
-      if (data.isActive) {
+      const remainingSeconds = await getPresaleRoundEnd();
+      if (remainingSeconds > 0) {
         interval = setInterval(() => {
           setSecondsToEnd((prev) => {
             if (prev === 1) {
@@ -23,9 +22,9 @@ export const Countdown = () => {
           });
         }, 1000);
       }
-      setSecondsToEnd(data.secondsToEnd);
-      setIsActive(data.isActive);
-      setCountdownName(data.name);
+      setSecondsToEnd(remainingSeconds);
+      setIsActive(remainingSeconds > 0);
+      setCountdownName('PRESALE ROUND 1');
     };
     getTokenCountdown();
 
@@ -34,18 +33,23 @@ export const Countdown = () => {
     };
   }, []);
 
-  const timeLeft = useMemo(() => ({
-    days: isActive && secondsToEnd ? Math.floor(secondsToEnd / 86400) : 0,
-    hours: isActive && secondsToEnd ? Math.floor((secondsToEnd % 86400) / 3600) : 0,
-    minutes: isActive && secondsToEnd ? Math.floor((secondsToEnd % 3600) / 60) : 0,
-    seconds: isActive && secondsToEnd ? secondsToEnd % 60 : 0
-  }), [isActive, secondsToEnd]);
+  const timeLeft = useMemo(
+    () => ({
+      days: isActive && secondsToEnd ? Math.floor(secondsToEnd / 86400) : 0,
+      hours: isActive && secondsToEnd ? Math.floor((secondsToEnd % 86400) / 3600) : 0,
+      minutes: isActive && secondsToEnd ? Math.floor((secondsToEnd % 3600) / 60) : 0,
+      seconds: isActive && secondsToEnd ? secondsToEnd % 60 : 0,
+    }),
+    [isActive, secondsToEnd]
+  );
 
   return (
     <SlCard data-hidden={secondsToEnd === null} className={`countdown ${isActive === false ? 'done' : ''}`}>
       <div className="countdown__inner">
         <div className="countdown__title">
-          <h2><span>{countdownName}</span></h2>
+          <h2>
+            <span>{countdownName}</span>
+          </h2>
           <span>end{isActive ? `s In:` : 'ed!'}</span>
         </div>
         <div className="countdown__timer">

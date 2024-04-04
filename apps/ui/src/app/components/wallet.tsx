@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMetaMaskContext } from '../context/metamask.context';
 import { ConnectWallet } from './connect-wallet';
 import { SlButton, SlPopup } from '@shoelace-style/shoelace/dist/react';
 
 export const Wallet = () => {
-  const [walletOpen, setWalletOpen] = React.useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
   const { status, account, disconnect } = useMetaMaskContext();
   const anchorRef = useRef(null);
   useEffect(() => {
