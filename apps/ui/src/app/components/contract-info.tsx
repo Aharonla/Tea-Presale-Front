@@ -14,7 +14,9 @@ const ContractInfo = ({ info }: IContractInfo) => {
         <div className="progress__info">
           <p className="title">Round Available </p>
           {info.roundSize && info.roundSold ? (
-            <p className="title">{info?.roundSize - info?.roundSold} TEA</p>
+            <p className="title">
+              {(info?.roundSize - info?.roundSold).toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
+            </p>
           ) : (
             <p className="title">--</p>
           )}
