@@ -12,12 +12,6 @@
     &__info {
       display: flex;
       justify-content: space-between;
-      // align-self: flex-start;
-      // align-content: flex-start;
-      // color: $color-text-trinary;
-      .title {
-        color: $color-text-trinary;
-      }
     }
     &__bar {
       &::part(indicator) {
@@ -28,6 +22,7 @@
         font-weight: 700;
       }
       &::part(base) {
+        margin-top: -10px;
         flex-wrap: wrap-reverse;
         border-radius: 5px;
         background-color: $color-input;
