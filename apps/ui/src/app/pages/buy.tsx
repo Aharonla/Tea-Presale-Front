@@ -111,7 +111,7 @@ export const Buy = () => {
         setSubmitting(false);
         setTimeout(() => {
           eventModalRef.current?.hide();
-        }, 1000);
+        }, 4000);
         return false;
       }
       setEventType('primary');
@@ -126,7 +126,7 @@ export const Buy = () => {
         setSubmitting(false);
         setTimeout(() => {
           eventModalRef.current?.hide();
-        }, 1000);
+        }, 4000);
         return false;
       }
       return true;
@@ -135,6 +135,9 @@ export const Buy = () => {
       setEventTitle(err.message);
       eventModalRef.current?.show();
       setSubmitting(false);
+      setTimeout(() => {
+        eventModalRef.current?.hide();
+      }, 4000);
       return false;
     }
   };
@@ -158,12 +161,15 @@ export const Buy = () => {
       setSubmitting(false);
       setTimeout(() => {
         eventModalRef.current?.hide();
-      }, 1000);
+      }, 4000);
     } catch (err: any) {
       setEventType('error');
       setEventTitle(err.message);
       eventModalRef.current?.show();
       setSubmitting(false);
+      setTimeout(() => {
+        eventModalRef.current?.hide();
+      }, 4000);
     }
   };
 
@@ -180,12 +186,18 @@ export const Buy = () => {
 
   return (
     <div className="buy page">
-      <SlAlert variant="primary" ref={eventModalRef} className="alert">
-        {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
-        {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
-        {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
-        {eventTitle}
-      </SlAlert>
+      <div className="alert">
+        <SlAlert
+          variant={eventType === 'error' ? 'warning' : 'primary'}
+          ref={eventModalRef}
+          className="alert__container"
+        >
+          {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
+          {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
+          {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
+          {eventTitle}
+        </SlAlert>
+      </div>
 
       <Countdown />
       {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}

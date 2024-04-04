@@ -4,29 +4,34 @@
   margin-inline: auto;
   padding-bottom: 100px;
   padding-top: 20px;
-  .alert {
-    &::part(base) {
-      background-color: $color-primary;
-      border-bottom: none;
-      border-left: none;
-      border-right: none;
-      border-radius: 5px;
-      position: absolute;
-      top: 130px;
-      left: 30px;
-      height: 40px;
-      padding-right: 20px;
-      color: '#fff';
-    }
 
-    &::part(message) {
-      color: $color-text-secondary;
-      height: 40px;
-      padding: 0;
-      margin-left: 10px;
-      align-content: center;
+  .alert {
+    position: relative;
+    &__container {
+      &::part(base) {
+        background-color: $color-primary;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        border-radius: 5px;
+        position: absolute;
+        top: -60px;
+        left: 0px;
+        right: 0px;
+        height: 40px;
+        padding-right: 20px;
+      }
+
+      &::part(message) {
+        color: $color-text-secondary;
+        height: 40px;
+        padding: 0;
+        margin-left: 10px;
+        align-content: center;
+      }
     }
   }
+
   .card {
     &::part(header) {
       padding-top: 1em;
