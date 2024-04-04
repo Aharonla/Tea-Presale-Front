@@ -232,7 +232,7 @@ export const Buy = () => {
             <SlOption value="tea">TEA</SlOption>
           </SlSelect>
           <div className="amount">
-            <small className="amount__balance">Available: {remainingTea.current} TEA</small>
+            <small className="amount__balance">Available: {remainingTea.current.toFixed(4)} TEA</small>
 
             <CoinInput
               disabled={tokenPrice === 0}
