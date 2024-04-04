@@ -9,7 +9,15 @@ import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
 import { Countdown } from '../components/countdown';
-import { enterPresaleUtil, getPresaleRoundSold, getPresaleRoundPrice, setTokenApprove } from '../utils/presale';
+import {
+  enterPresaleUtil,
+  getPresaleRoundSold,
+  getPresaleRoundInfo,
+  getPresaleRoundPrice,
+  getPresaleUserBalance,
+  setTokenApprove,
+} from '../utils/presale';
+
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
@@ -42,6 +50,7 @@ export const Buy = () => {
     roundSize: null,
   });
   const remainingTea = useRef(0);
+  const userTeaPurchased = useRef(0);
 
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
@@ -84,8 +93,15 @@ export const Buy = () => {
       setContractInfo(result);
       remainingTea.current = result.roundSize - result.roundSold;
     };
+    const getPurchased = async () => {
+      if (account) {
+        const userBalance = await getPresaleUserBalance(account);
+        userTeaPurchased.current = userBalance;
+      }
+    };
     getInfo();
     getTokenPrice();
+    getPurchased();
   }, []);
 
   const handleContractResponse = (response: any) => {
@@ -232,7 +248,10 @@ export const Buy = () => {
             <SlOption value="tea">TEA</SlOption>
           </SlSelect>
           <div className="amount">
-            <small className="amount__balance">Available: {remainingTea.current.toFixed(4)} TEA</small>
+            <small className="amount__balance">
+              Amount Purchased: {userTeaPurchased.current.toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
+            </small>
+
 
             <CoinInput
               disabled={tokenPrice === 0}
