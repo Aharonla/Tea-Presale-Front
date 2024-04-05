@@ -12,7 +12,6 @@ import { Countdown } from '../components/countdown';
 import {
   enterPresaleUtil,
   getPresaleRoundSold,
-  getPresaleRoundInfo,
   getPresaleRoundPrice,
   getPresaleUserBalance,
   setTokenApprove,
@@ -41,7 +40,7 @@ export const Buy = () => {
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
-
+  const [triggerUserBuy, setTriggerUserBuy] = useState<boolean>(false);
   const [contractInfo, setContractInfo] = useState<{
     roundSold: null | number;
     roundSize: null | number;
@@ -51,7 +50,6 @@ export const Buy = () => {
   });
   const remainingTea = useRef(0);
   const userTeaPurchased = useRef(0);
-
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
       setAmount(() => convertCoin(amountInTea, false, selectedCoin));
@@ -84,6 +82,24 @@ export const Buy = () => {
   }, [updateValueOfLastTouchedInput]);
 
   useEffect(() => {
+    const getPurchased = async () => {
+      if (account) {
+        const userBalance = await getPresaleUserBalance(account);
+        userTeaPurchased.current = userBalance;
+      }
+    };
+    getPurchased();
+  }, [triggerUserBuy]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timer;
+
+    const initializeProvider = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+      }
+    };
+
     const getTokenPrice = async () => {
       const price = await getPresaleRoundPrice();
       setTokenPrice(price);
@@ -99,9 +115,18 @@ export const Buy = () => {
         userTeaPurchased.current = userBalance;
       }
     };
+    initializeProvider();
     getInfo();
     getTokenPrice();
     getPurchased();
+
+    interval = setInterval(() => {
+      getInfo();
+    }, 60000);
+
+    return () => {
+      interval && clearInterval(interval);
+    };
   }, []);
 
   const handleContractResponse = (response: any) => {
@@ -113,6 +138,7 @@ export const Buy = () => {
       setEventType('error');
     }
   };
+
   const handleApprove = async () => {
     try {
       if (!amount || !paymentAssets[selectedCoin]?.decimal) {
@@ -176,6 +202,7 @@ export const Buy = () => {
       );
       handleContractResponse(res);
       setSubmitting(false);
+      setTriggerUserBuy((prev) => !prev);
       setTimeout(() => {
         eventModalRef.current?.hide();
       }, 1000);
@@ -186,17 +213,6 @@ export const Buy = () => {
       setSubmitting(false);
     }
   };
-
-  // for fixing issue of ethers-js can't get singer from provider!
-  useEffect(() => {
-    const initializeProvider = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-      }
-    };
-
-    initializeProvider();
-  }, []);
 
   return (
     <div className="buy page">
@@ -255,7 +271,6 @@ export const Buy = () => {
             <small className="amount__balance">
               Amount Purchased: {userTeaPurchased.current.toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
             </small>
-
 
             <CoinInput
               disabled={tokenPrice === 0}

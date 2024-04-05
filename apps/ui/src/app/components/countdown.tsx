@@ -8,6 +8,8 @@ export const Countdown = () => {
   const [countdownName, setCountdownName] = useState<string | null>(null);
   useEffect(() => {
     let interval: NodeJS.Timer;
+    let outinterval: NodeJS.Timer;
+
     const getTokenCountdown = async () => {
       const roundInfo = await getPresaleRoundInfo();
       const currentDate = new Date();
@@ -30,8 +32,14 @@ export const Countdown = () => {
     };
     getTokenCountdown();
 
+    outinterval = setInterval(() => {
+      clearInterval(interval);
+      getTokenCountdown();
+    }, 60000);
+
     return () => {
       interval && clearInterval(interval);
+      outinterval && clearInterval(outinterval);
     };
   }, []);
 

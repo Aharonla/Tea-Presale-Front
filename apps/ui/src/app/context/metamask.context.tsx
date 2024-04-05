@@ -133,6 +133,8 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
   const disconnect = useCallback(() => {
     setBalanceETH(() => null);
     setBalanceUSDT(() => null);
+    setBalanceUSDC(() => null);
+
     setValues((values) => ({ ...values, account: null, status: MetaMaskStatus.DISCONNECTED }));
   }, []);
 
