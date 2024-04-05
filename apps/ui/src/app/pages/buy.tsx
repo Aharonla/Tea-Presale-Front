@@ -33,6 +33,7 @@ export const Buy = () => {
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean | null>(null);
 
   const [contractInfo, setContractInfo] = useState<{
     roundSold: null | number;
@@ -62,6 +63,7 @@ export const Buy = () => {
     return (
       !amount ||
       !amountInTea ||
+      !isActive ||
       paymentAssets[selectedCoin] === null ||
       coinValuation[selectedCoin] === null ||
       submitting ||
@@ -198,8 +200,7 @@ export const Buy = () => {
           {eventTitle}
         </SlAlert>
       </div>
-
-      <Countdown />
+      <Countdown isActive={isActive} setIsActive={setIsActive} />
       {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}
       <ContractInfo info={contractInfo} />
       <SlCard className="card">
@@ -259,8 +260,8 @@ export const Buy = () => {
           </div>
         </SlCard>
       </SlCard>
-      <SlButton onClick={enterPresale} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
-        {submitting ? <Spinner /> : 'BUY TEA'}
+      <SlButton onClick={enterPresale} disabled={!buyButtonDisabled} variant="primary" className="buy__btn">
+        {!isActive ? <>{submitting ? <Spinner /> : 'BUY TEA'}</> : 'Presale Current Round Ended.'}
       </SlButton>
     </div>
   );

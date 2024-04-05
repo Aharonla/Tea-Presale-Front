@@ -26,9 +26,13 @@ export async function setTokenApprove(tokenAddress: string, value: number, decim
       txid: tx,
     };
   } catch (err: any) {
+    let message = 'Transaction Failed';
+    if (err.code == 'ACTION_REJECTED') {
+      message = 'Transaction Rejected by user';
+    }
     return {
       status: 'FAILURE',
-      message: 'Transaction Rejected.',
+      message,
     };
   }
 }

@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { SlCard } from '@shoelace-style/shoelace/dist/react';
 import { getPresaleRoundInfo } from '../utils/presale';
-
-export const Countdown = () => {
+interface ICountdown {
+  isActive: boolean | null;
+  setIsActive: Dispatch<SetStateAction<boolean | null>>;
+}
+export const Countdown = ({ isActive, setIsActive }: ICountdown) => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
-  const [isActive, setIsActive] = useState<boolean | null>(null);
   const [countdownName, setCountdownName] = useState<string | null>(null);
   useEffect(() => {
     let interval: NodeJS.Timer;
