@@ -1,17 +1,19 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { SlCard } from '@shoelace-style/shoelace/dist/react';
-import { getPresaleRoundInfo } from '../utils/presale';
 interface ICountdown {
   isActive: boolean | null;
+  roundInfo: {
+    currentRound: number;
+    roundEnd: number;
+  };
   setIsActive: Dispatch<SetStateAction<boolean | null>>;
 }
-export const Countdown = ({ isActive, setIsActive }: ICountdown) => {
+export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
   const [countdownName, setCountdownName] = useState<string | null>(null);
   useEffect(() => {
     let interval: NodeJS.Timer;
     const getTokenCountdown = async () => {
-      const roundInfo = await getPresaleRoundInfo();
       const currentDate = new Date();
       const endDate = new Date(roundInfo.roundEnd * 1000);
       const secondsLeft = endDate.valueOf() - currentDate.valueOf();
@@ -30,12 +32,14 @@ export const Countdown = ({ isActive, setIsActive }: ICountdown) => {
       setIsActive(secondsLeft > 0);
       setCountdownName(`PRESALE ROUND ${roundInfo.currentRound}`);
     };
-    getTokenCountdown();
+    if (roundInfo) {
+      getTokenCountdown();
+    }
 
     return () => {
       interval && clearInterval(interval);
     };
-  }, []);
+  }, [roundInfo]);
 
   const timeLeft = useMemo(
     () => ({

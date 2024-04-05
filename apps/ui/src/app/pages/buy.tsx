@@ -8,6 +8,7 @@ import { CoinInput } from '../components/coin-input';
 import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
 import teaToken from '../../assets/icons/tea-token.svg';
+import teaLogo from '../../assets/icons/tea-logo-new.svg';
 import { Countdown } from '../components/countdown';
 import {
   enterPresaleUtil,
@@ -42,7 +43,11 @@ export const Buy = () => {
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const [roundInfo, setRoundInfo] = useState<{
+    currentRound: number;
+    roundEnd: number;
+  }>({ currentRound: 0, roundEnd: 0 });
   const [contractInfo, setContractInfo] = useState<{
     roundSold: null | number;
     roundSize: null | number;
@@ -75,6 +80,7 @@ export const Buy = () => {
       !isActive ||
       paymentAssets[selectedCoin] === null ||
       coinValuation[selectedCoin] === null ||
+      loading ||
       submitting ||
       amountInTea > remainingTea.current ||
       amount > Number(paymentAssets[selectedCoin].balance)
@@ -86,24 +92,35 @@ export const Buy = () => {
   }, [updateValueOfLastTouchedInput]);
 
   useEffect(() => {
-    const getTokenPrice = async () => {
-      const price = await getPresaleRoundPrice();
-      setTokenPrice(price);
-    };
     const getInfo = async () => {
+      const price = await getPresaleRoundPrice();
+      const roundResult = await getPresaleRoundInfo();
       const result = await getPresaleRoundSold();
+      setRoundInfo(roundResult);
       setContractInfo(result);
       remainingTea.current = result.roundSize - result.roundSold;
+      setTokenPrice(price);
     };
+
     const getPurchased = async () => {
       if (account) {
         const userBalance = await getPresaleUserBalance(account);
         userTeaPurchased.current = userBalance;
       }
     };
-    getInfo();
-    getTokenPrice();
-    getPurchased();
+    const initializeProvider = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+      }
+    };
+
+    const handleStart = async () => {
+      initializeProvider();
+      await getInfo();
+      await getPurchased();
+      setLoading(false);
+    };
+    handleStart();
   }, []);
 
   const handleContractResponse = (response: any) => {
@@ -195,97 +212,97 @@ export const Buy = () => {
     }
   };
 
-  // for fixing issue of ethers-js can't get singer from provider!
-  useEffect(() => {
-    const initializeProvider = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-      }
-    };
-
-    initializeProvider();
-  }, []);
-
   return (
     <div className="buy page">
-      <div className="alert">
-        <SlAlert
-          variant={eventType === 'error' ? 'warning' : 'primary'}
-          ref={eventModalRef}
-          className="alert__container"
-        >
-          {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
-          {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
-          {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
-          {eventTitle}
-        </SlAlert>
-      </div>
-      <Countdown isActive={isActive} setIsActive={setIsActive} />
-      {tokenPrice > 0 && <TokenRate tokenPrice={tokenPrice} />}
-      <ContractInfo info={contractInfo} />
-      <SlCard className="card">
-        <SlCard className="card__inner">
-          <SlSelect
-            size="large"
-            value={selectedCoin}
-            onSlInput={(e) => {
-              setSelectedCoin((e.target as HTMLSelectElement).value as CoinType);
-              updateValueOfLastTouchedInput();
-            }}
-            className="select-coin"
-          >
-            <img className="coin-icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Tether" />
-            {coins
-              .map((key) => mappedCoins[key])
-              .map(({ icon, label, value }) => (
-                <SlOption value={value} key={value}>
-                  <img className="coin-icon" slot="prefix" src={icon} alt="Tether" />
-                  {label}
-                </SlOption>
-              ))}
-          </SlSelect>
-          <div className="amount">
-            <small className="amount__balance">{formattedBalance}</small>
-            <CoinInput
-              disabled={tokenPrice === 0}
-              valueAsNumber={amount}
-              decimals={Number(paymentAssets[selectedCoin]?.decimal) || 18}
-              onChangeValue={(value) => {
-                lastInputTouched.current = 'coin';
-                setAmount(value);
-                setAmountInTea(convertCoin(value, true, selectedCoin));
-              }}
-            />
-          </div>
-          <SlIcon name="arrow-down-circle-fill" className="convert-icon" />
-        </SlCard>
-        <SlCard className="card__inner tea">
-          <SlSelect size="large" value="tea" className="select-coin" disabled>
-            <img src={teaToken} alt="Tea" slot="prefix" className="coin-icon" />
-            <SlOption value="tea">TEA</SlOption>
-          </SlSelect>
-          <div className="amount">
-            <small className="amount__balance">
-              Amount Purchased: {userTeaPurchased.current.toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
-            </small>
+      {loading ? (
+        <div className="loading">
+          <div className="loading__inner">
+            <img src={teaLogo} alt="Tea" slot="prefix" className="loading__logo" />
 
-
-            <CoinInput
-              disabled={tokenPrice === 0}
-              valueAsNumber={amountInTea}
-              decimals={9}
-              onChangeValue={(value) => {
-                lastInputTouched.current = 'tea';
-                setAmount(convertCoin(value, false, selectedCoin));
-                setAmountInTea(value);
-              }}
-            />
+            <Spinner />
           </div>
-        </SlCard>
-      </SlCard>
-      <SlButton onClick={enterPresale} disabled={!buyButtonDisabled} variant="primary" className="buy__btn">
-        {!isActive ? <>{submitting ? <Spinner /> : 'BUY TEA'}</> : 'Presale Current Round Ended.'}
-      </SlButton>
+        </div>
+      ) : (
+        <>
+          <div className="alert">
+            <SlAlert
+              variant={eventType === 'error' ? 'warning' : 'primary'}
+              ref={eventModalRef}
+              className="alert__container"
+            >
+              {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
+              {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
+              {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
+              {eventTitle}
+            </SlAlert>
+          </div>
+          <Countdown roundInfo={roundInfo} isActive={isActive} setIsActive={setIsActive} />
+          <TokenRate tokenPrice={tokenPrice} />
+          <ContractInfo info={contractInfo} />
+          <SlCard className="card">
+            <SlCard className="card__inner">
+              <SlSelect
+                size="large"
+                value={selectedCoin}
+                onSlInput={(e) => {
+                  setSelectedCoin((e.target as HTMLSelectElement).value as CoinType);
+                  updateValueOfLastTouchedInput();
+                }}
+                className="select-coin"
+              >
+                <img className="coin-icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Tether" />
+                {coins
+                  .map((key) => mappedCoins[key])
+                  .map(({ icon, label, value }) => (
+                    <SlOption value={value} key={value}>
+                      <img className="coin-icon" slot="prefix" src={icon} alt="Tether" />
+                      {label}
+                    </SlOption>
+                  ))}
+              </SlSelect>
+              <div className="amount">
+                <small className="amount__balance">{formattedBalance}</small>
+                <CoinInput
+                  disabled={tokenPrice === 0}
+                  valueAsNumber={amount}
+                  decimals={Number(paymentAssets[selectedCoin]?.decimal) || 18}
+                  onChangeValue={(value) => {
+                    lastInputTouched.current = 'coin';
+                    setAmount(value);
+                    setAmountInTea(convertCoin(value, true, selectedCoin));
+                  }}
+                />
+              </div>
+              <SlIcon name="arrow-down-circle-fill" className="convert-icon" />
+            </SlCard>
+            <SlCard className="card__inner tea">
+              <SlSelect size="large" value="tea" className="select-coin" disabled>
+                <img src={teaToken} alt="Tea" slot="prefix" className="coin-icon" />
+                <SlOption value="tea">TEA</SlOption>
+              </SlSelect>
+              <div className="amount">
+                <small className="amount__balance">
+                  Amount Purchased: {userTeaPurchased.current.toLocaleString('en-US', { maximumFractionDigits: 4 })} TEA
+                </small>
+
+                <CoinInput
+                  disabled={tokenPrice === 0}
+                  valueAsNumber={amountInTea}
+                  decimals={9}
+                  onChangeValue={(value) => {
+                    lastInputTouched.current = 'tea';
+                    setAmount(convertCoin(value, false, selectedCoin));
+                    setAmountInTea(value);
+                  }}
+                />
+              </div>
+            </SlCard>
+          </SlCard>
+          <SlButton onClick={enterPresale} disabled={!buyButtonDisabled} variant="primary" className="buy__btn">
+            {submitting ? <Spinner /> : <>{isActive ? 'BUY TEA' : 'Presale Current Round Ended.'}</>}
+          </SlButton>
+        </>
+      )}
     </div>
   );
 };
