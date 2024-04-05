@@ -68,13 +68,16 @@ export async function enterPresaleUtil(value: number, referral: number, token: s
   }
 }
 
-export async function getPresaleRoundEnd() {
+export async function getPresaleRoundInfo() {
   // updated provider with custom url for better testnet experience
   const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
-  const roundInfo = await presaleContract.getRoundEnd();
-  const formatted = ethers.FixedNumber.fromValue(roundInfo);
-  return Number(formatted._value);
+  const roundEnd = await presaleContract.getRoundEnd();
+  const currentRound = await presaleContract.currentRound();
+  return {
+    currentRound: Number(currentRound),
+    roundEnd: Number(roundEnd),
+  };
 }
 
 export async function getPresaleRoundPrice() {
@@ -88,7 +91,7 @@ export async function getPresaleRoundPrice() {
   return Number(formattedPrice) / Number(formattedPercentage);
 }
 
-export async function getPresaleRoundInfo() {
+export async function getPresaleRoundSold() {
   try {
     // updated provider with custom url for better testnet experience
     const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
@@ -106,4 +109,13 @@ export async function getPresaleRoundInfo() {
       roundSold: 0,
     };
   }
+}
+
+export async function getPresaleUserBalance(address: string) {
+  // updated provider with custom url for better testnet experience
+  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
+  const userBalance = await presaleContract.balanceOf(address);
+  const decimals = await presaleContract.decimals();
+  return Number(ethers.formatUnits(userBalance, decimals));
 }
