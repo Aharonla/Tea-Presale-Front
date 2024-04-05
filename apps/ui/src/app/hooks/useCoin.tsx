@@ -17,7 +17,7 @@ export const useCoin = ({ tokenPrice }: coinProps) => {
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const conversionRate = coinValuation[selectedCoin]! * tokenRate;
-      return toTea ? value * conversionRate : value / conversionRate;
+      return Number((toTea ? value * conversionRate : value / conversionRate).toFixed(4));
     },
     [coinValuation, tokenRate]
   );
