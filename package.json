@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve ui"
+    "start": "nx serve ui",
+    "build" : "npx nx build ui"
   },
   "private": true,
   "dependencies": {
