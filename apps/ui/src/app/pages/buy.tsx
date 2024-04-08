@@ -36,7 +36,7 @@ export const Buy = () => {
   const [amountInTea, setAmountInTea] = useState<number>();
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventType, setEventType] = useState<string>('primary');
-  const { paymentAssets, account } = useMetaMaskContext();
+  const { paymentAssets, account, updateUserBalance } = useMetaMaskContext();
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -88,6 +88,8 @@ export const Buy = () => {
         userTeaPurchased.current = userBalance;
       }
     };
+    // only updated after purchase or user referesh (for not getting rate-limited.)
+    updateUserBalance();
     getPurchased();
   }, [triggerUserBuy]);
 
@@ -127,7 +129,7 @@ export const Buy = () => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, []);
+  }, [account]);
 
   const handleContractResponse = (response: any) => {
     if (response.status === 'SUCCESS') {

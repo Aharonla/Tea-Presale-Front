@@ -25,6 +25,7 @@ export interface MetaMaskContext {
   status: MetaMaskStatus;
   connect: () => void;
   disconnect: () => void;
+  updateUserBalance: () => void;
   paymentAssets: Record<
     CoinType,
     null | {
@@ -86,7 +87,6 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
 
       setDecimalUSDC(usdcDecimal);
       setDecimalUSDT(usdtDecimal);
-
       if (balance === '0x') {
         setBalanceETH('0');
         return;
@@ -100,6 +100,11 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
     }
   }, []);
 
+  const updateUserBalance = useCallback(async () => {
+    if (values.account) {
+      _getBalance(values.account);
+    }
+  }, [values]);
   const onAccountsChanged = useCallback(
     (accounts: any) => {
       const [account] = accounts as string[];
@@ -190,6 +195,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         ...values,
         connect,
         disconnect,
+        updateUserBalance,
         paymentAssets: {
           eth: { balance: balanceETH, decimal: '18' },
           usdt: { balance: balanceUSDT, decimal: deciammlUSDT },
