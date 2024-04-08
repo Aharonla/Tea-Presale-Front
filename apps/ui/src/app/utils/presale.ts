@@ -72,7 +72,7 @@ export async function enterPresaleUtil(value: number, referral: number, token: s
   }
 }
 
-export async function getPresaleRoundInfo() {
+export async function getPresaleCurrentRoundInfo() {
   // updated provider with custom url for better testnet experience
   const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
@@ -122,4 +122,18 @@ export async function getPresaleUserBalance(address: string) {
   const userBalance = await presaleContract.balanceOf(address);
   const decimals = await presaleContract.decimals();
   return Number(ethers.formatUnits(userBalance, decimals));
+}
+
+export async function getPresaleRoundInfo(round: number) {
+  // updated provider with custom url for better testnet experience
+  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
+  const roundInfo = await presaleContract.rounds(round);
+  return {
+    startTime: Number(roundInfo[0]),
+    duration: Number(roundInfo[1]),
+    size: Number(roundInfo[2]),
+    price: Number(roundInfo[3]),
+    sold: Number(roundInfo[4]),
+  };
 }

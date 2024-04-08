@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SlCard, SlSelect, SlOption, SlIcon, SlButton, SlAlert } from '@shoelace-style/shoelace/dist/react';
+import { SlCard, SlSelect, SlOption, SlIcon, SlButton, SlAlert, SlDialog } from '@shoelace-style/shoelace/dist/react';
 import { useMetaMaskContext } from '../context/metamask.context';
 import tetherIcon from '../../assets/icons/tether.svg';
 import usdcIcon from '../../assets/icons/usd-coin-usdc-logo.svg';
@@ -13,15 +13,16 @@ import { Countdown } from '../components/countdown';
 import {
   enterPresaleUtil,
   getPresaleRoundSold,
-  getPresaleRoundInfo,
+  getPresaleCurrentRoundInfo,
   getPresaleRoundPrice,
   getPresaleUserBalance,
   setTokenApprove,
+  getPresaleRoundInfo,
 } from '../utils/presale';
-
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
+import { getTimeDiffrenece } from '../utils/calculation';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
@@ -44,6 +45,11 @@ export const Buy = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [eventModal, setEventModal] = useState(false);
+  const [eventInfo, setEventInfo] = useState({
+    title: '',
+    subTitle: '',
+  });
   const [roundInfo, setRoundInfo] = useState<{
     currentRound: number;
     roundEnd: number;
@@ -82,7 +88,7 @@ export const Buy = () => {
       coinValuation[selectedCoin] === null ||
       loading ||
       submitting ||
-      amountInTea > remainingTea.current ||
+      amountInTea < remainingTea.current ||
       amount > Number(paymentAssets[selectedCoin].balance)
     );
   }, [amount, paymentAssets, coinValuation, selectedCoin, amountInTea, submitting, remainingTea]);
@@ -92,9 +98,24 @@ export const Buy = () => {
   }, [updateValueOfLastTouchedInput]);
 
   useEffect(() => {
+    const handleEvent = async () => {
+      if (isActive === false) {
+        const nextRound = await getPresaleRoundInfo(roundInfo.currentRound + 1);
+        setEventInfo({
+          title: `Presale Round ${roundInfo.currentRound} Round is Over!`,
+          subTitle:
+            nextRound.startTime > 0 ? `Next round will start in ${getTimeDiffrenece(nextRound.startTime * 1000)}!` : '',
+        });
+        setEventModal(true);
+      }
+    };
+    handleEvent();
+  }, [isActive]);
+
+  useEffect(() => {
     const getInfo = async () => {
       const price = await getPresaleRoundPrice();
-      const roundResult = await getPresaleRoundInfo();
+      const roundResult = await getPresaleCurrentRoundInfo();
       const result = await getPresaleRoundSold();
       setRoundInfo(roundResult);
       setContractInfo(result);
@@ -214,6 +235,21 @@ export const Buy = () => {
 
   return (
     <div className="buy page">
+      <SlDialog className="event-modal" label="Attention!" open={eventModal} onSlAfterHide={() => setEventModal(false)}>
+        <div className="event-modal__info">
+          <h3 className="event-modal__title">{eventInfo.title}</h3>
+          {eventInfo.subTitle && <p className="event-modal__sub-title">{eventInfo.subTitle}</p>}
+          <p className="event-modal__sub-title">Follow us on our social medias to get latest news.</p>
+        </div>
+        <SlButton
+          className="event-modal__close-btn"
+          slot="footer"
+          variant="primary"
+          onClick={() => setEventModal(false)}
+        >
+          Close
+        </SlButton>
+      </SlDialog>
       {loading ? (
         <div className="loading">
           <div className="loading__inner">
