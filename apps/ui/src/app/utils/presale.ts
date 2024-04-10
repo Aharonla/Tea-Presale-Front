@@ -12,12 +12,12 @@ export async function getTokenAllowance(tokenAddress: string, ownerAddress: stri
   return ethers.formatUnits(allowance, numDecimals);
 }
 
-export async function setTokenApprove(tokenAddress: string, value: number, decimal: string) {
+export async function setTokenApprove(tokenAddress: string, value: string, decimal: string) {
   try {
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     const signer = await provider.getSigner();
     const contract = new Contract(tokenAddress, ERC20_ABI, signer);
-    const amount = parseUnits(String(value), decimal);
+    const amount = parseUnits(value, decimal);
     const tx = await contract.approve(PRESALE_CONTRACT_ADDRESS, amount);
     await tx.wait();
     return {
@@ -33,14 +33,14 @@ export async function setTokenApprove(tokenAddress: string, value: number, decim
   }
 }
 
-export async function enterPresaleUtil(value: number, referral: number, token: string) {
+export async function enterPresaleUtil(value: string, referral: number, token: string) {
   try {
     // updated provider with custom url for better testnet experience
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     const signer = await provider.getSigner();
     const contract = new Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
     const decimals = await contract.decimals();
-    const amount = parseUnits(String(value), decimals);
+    const amount = parseUnits(value, decimals);
     const tx = await contract.buyTokens(amount, referral, token);
     await tx.wait();
     return {
