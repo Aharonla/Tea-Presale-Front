@@ -1,5 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { SlCard } from '@shoelace-style/shoelace/dist/react';
+import { useEventContext } from '../context/event.context';
+import { getPresaleRoundInfo } from '../utils/presale';
+import { getTimeDiffrenece } from '../utils/calculation';
 interface ICountdown {
   isActive: boolean | null;
   roundInfo: {
@@ -11,6 +14,8 @@ interface ICountdown {
 export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
   const [countdownName, setCountdownName] = useState<string | null>(null);
+  const { showModal, setEventInfo } = useEventContext();
+
   useEffect(() => {
     let interval: NodeJS.Timer;
     const getTokenCountdown = async () => {
@@ -27,6 +32,16 @@ export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
             return prev ? prev - 1 : 0;
           });
         }, 1000);
+      } else {
+        const nextRound = await getPresaleRoundInfo(roundInfo.currentRound + 1);
+        setEventInfo({
+          title: `Presale Round ${roundInfo.currentRound} Round is Over!`,
+          subTitle:
+            nextRound.startTime > 0
+              ? `Next round will start in ${getTimeDiffrenece(nextRound.startTime * 1000)}!`
+              : 'Follow us on our social medias to get latest news.',
+        });
+        showModal();
       }
       setSecondsToEnd(Math.floor(secondsLeft / 1000));
       setIsActive(secondsLeft > 0);
