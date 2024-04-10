@@ -35,8 +35,8 @@ export const Buy = () => {
   const lastInputTouched = useRef<'tea' | 'coin' | null>(null);
   const eventModalRef = useRef<any>(null);
   const [selectedCoin, setSelectedCoin] = useState<CoinType>('usdc');
-  const [amount, setAmount] = useState<number>();
-  const [amountInTea, setAmountInTea] = useState<number>();
+  const [amount, setAmount] = useState<string>();
+  const [amountInTea, setAmountInTea] = useState<string>();
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventType, setEventType] = useState<string>('primary');
   const { paymentAssets, account } = useMetaMaskContext();
@@ -88,8 +88,8 @@ export const Buy = () => {
       coinValuation[selectedCoin] === null ||
       loading ||
       submitting ||
-      amountInTea < remainingTea.current ||
-      amount > Number(paymentAssets[selectedCoin].balance)
+      Number(amountInTea) > remainingTea.current ||
+      Number(amount) > Number(paymentAssets[selectedCoin].balance)
     );
   }, [amount, paymentAssets, coinValuation, selectedCoin, amountInTea, submitting, remainingTea]);
 
@@ -161,7 +161,7 @@ export const Buy = () => {
       setEventType('primary');
       setEventTitle('Waiting for transaction 1/3 approval...');
       eventModalRef.current?.show();
-      const res1 = await setTokenApprove(mappedCoins[selectedCoin].contract, 0, paymentAssets[selectedCoin]?.decimal);
+      const res1 = await setTokenApprove(mappedCoins[selectedCoin].contract, '0', paymentAssets[selectedCoin]?.decimal);
       handleContractResponse(res1);
       if (res1.status === 'FAILURE') {
         setSubmitting(false);
@@ -300,12 +300,12 @@ export const Buy = () => {
                 <small className="amount__balance">{formattedBalance}</small>
                 <CoinInput
                   disabled={tokenPrice === 0}
-                  valueAsNumber={amount}
+                  value={amount}
                   decimals={Number(paymentAssets[selectedCoin]?.decimal) || 18}
                   onChangeValue={(value) => {
                     lastInputTouched.current = 'coin';
                     setAmount(value);
-                    setAmountInTea(convertCoin(value, true, selectedCoin));
+                    setAmountInTea(convertCoin(String(value), true, selectedCoin));
                   }}
                 />
               </div>
@@ -323,7 +323,7 @@ export const Buy = () => {
 
                 <CoinInput
                   disabled={tokenPrice === 0}
-                  valueAsNumber={amountInTea}
+                  value={amountInTea}
                   decimals={9}
                   onChangeValue={(value) => {
                     lastInputTouched.current = 'tea';
