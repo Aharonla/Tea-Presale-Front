@@ -17,12 +17,11 @@ import {
   getPresaleRoundPrice,
   getPresaleUserBalance,
   setTokenApprove,
-  getPresaleRoundInfo,
 } from '../utils/presale';
 import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
-import { getTimeDiffrenece } from '../utils/calculation';
+import { useEventContext } from '../context/event.context';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
@@ -38,18 +37,13 @@ export const Buy = () => {
   const [amount, setAmount] = useState<string>();
   const [amountInTea, setAmountInTea] = useState<string>();
   const [eventTitle, setEventTitle] = useState<string>('');
-  const [eventType, setEventType] = useState<string>('primary');
   const { paymentAssets, account } = useMetaMaskContext();
+  const { showModal, setEventInfo } = useEventContext();
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [eventModal, setEventModal] = useState(false);
-  const [eventInfo, setEventInfo] = useState({
-    title: '',
-    subTitle: '',
-  });
   const [roundInfo, setRoundInfo] = useState<{
     currentRound: number;
     roundEnd: number;
@@ -98,21 +92,6 @@ export const Buy = () => {
   }, [updateValueOfLastTouchedInput]);
 
   useEffect(() => {
-    const handleEvent = async () => {
-      if (isActive === false) {
-        const nextRound = await getPresaleRoundInfo(roundInfo.currentRound + 1);
-        setEventInfo({
-          title: `Presale Round ${roundInfo.currentRound} Round is Over!`,
-          subTitle:
-            nextRound.startTime > 0 ? `Next round will start in ${getTimeDiffrenece(nextRound.startTime * 1000)}!` : '',
-        });
-        setEventModal(true);
-      }
-    };
-    handleEvent();
-  }, [isActive]);
-
-  useEffect(() => {
     const getInfo = async () => {
       const price = await getPresaleRoundPrice();
       const roundResult = await getPresaleCurrentRoundInfo();
@@ -144,56 +123,28 @@ export const Buy = () => {
     handleStart();
   }, []);
 
-  const handleContractResponse = (response: any) => {
-    if (response.status === 'SUCCESS') {
-      setEventTitle('Transaction approved!');
-      setEventType('success');
-    } else {
-      setEventTitle(response.message);
-      setEventType('error');
-    }
-  };
   const handleApprove = async () => {
     try {
       if (!amount || !paymentAssets[selectedCoin]?.decimal) {
         return;
       }
-      setEventType('primary');
-      setEventTitle('Waiting for transaction 1/3 approval...');
+      setEventTitle('Waiting For Transaction (1/3) Approval...');
       eventModalRef.current?.show();
-      const res1 = await setTokenApprove(mappedCoins[selectedCoin].contract, '0', paymentAssets[selectedCoin]?.decimal);
-      handleContractResponse(res1);
-      if (res1.status === 'FAILURE') {
-        setSubmitting(false);
-        setTimeout(() => {
-          eventModalRef.current?.hide();
-        }, 4000);
-        return false;
-      }
-      setEventType('primary');
-      setEventTitle('Waiting for transaction 2/3 approval...');
-      const res2 = await setTokenApprove(
-        mappedCoins[selectedCoin].contract,
-        amount,
-        paymentAssets[selectedCoin]?.decimal
-      );
-      handleContractResponse(res2);
-      if (res2.status === 'FAILURE') {
-        setSubmitting(false);
-        setTimeout(() => {
-          eventModalRef.current?.hide();
-        }, 4000);
-        return false;
-      }
+      await setTokenApprove(mappedCoins[selectedCoin].contract, '0', paymentAssets[selectedCoin]?.decimal);
+      setEventTitle('Waiting For Transaction (2/3) Approval...');
+      await setTokenApprove(mappedCoins[selectedCoin].contract, amount, paymentAssets[selectedCoin]?.decimal);
       return true;
     } catch (err: any) {
-      setEventType('error');
-      setEventTitle(err.message);
-      eventModalRef.current?.show();
-      setSubmitting(false);
-      setTimeout(() => {
-        eventModalRef.current?.hide();
-      }, 4000);
+      eventModalRef.current?.hide();
+      let message = 'Transaction rejected.';
+      if (err?.code == 'ACTION_REJECTED') {
+        message = 'Transaction Rejected by user';
+      }
+      setEventInfo({
+        title: 'Transaction Failed',
+        subTitle: message,
+      });
+      showModal();
       return false;
     }
   };
@@ -209,47 +160,40 @@ export const Buy = () => {
         setSubmitting(false);
         return;
       }
-      setEventType('primary');
-      setEventTitle('Waiting for transaction 3/3 approval...');
+      setEventTitle('Waiting For Transaction (3/3) Approval...');
       eventModalRef.current?.show();
       const res = await enterPresaleUtil(
         amountInTea,
         Number(window.localStorage.getItem('referral')),
         mappedCoins[selectedCoin].contract
       );
-      handleContractResponse(res);
-      setSubmitting(false);
-      setTimeout(() => {
+      if (res.status === 'SUCCSS') {
+        setEventTitle('Transaction Approved ✅');
+        setTimeout(() => {
+          eventModalRef.current?.hide();
+        }, 4000);
+      } else {
         eventModalRef.current?.hide();
-      }, 4000);
+        setEventInfo({
+          title: 'Transaction Failed',
+          subTitle: res.message,
+        });
+        showModal();
+      }
+      setSubmitting(false);
     } catch (err: any) {
-      setEventType('error');
-      setEventTitle(err.message);
-      eventModalRef.current?.show();
+      eventModalRef.current?.hide();
+      setEventInfo({
+        title: 'Transaction Failed',
+        subTitle: err.message,
+      });
+      showModal();
       setSubmitting(false);
-      setTimeout(() => {
-        eventModalRef.current?.hide();
-      }, 4000);
     }
   };
 
   return (
     <div className="buy page">
-      <SlDialog className="event-modal" label="Attention!" open={eventModal} onSlAfterHide={() => setEventModal(false)}>
-        <div className="event-modal__info">
-          <h3 className="event-modal__title">{eventInfo.title}</h3>
-          {eventInfo.subTitle && <p className="event-modal__sub-title">{eventInfo.subTitle}</p>}
-          <p className="event-modal__sub-title">Follow us on our social medias to get latest news.</p>
-        </div>
-        <SlButton
-          className="event-modal__close-btn"
-          slot="footer"
-          variant="primary"
-          onClick={() => setEventModal(false)}
-        >
-          Close
-        </SlButton>
-      </SlDialog>
       {loading ? (
         <div className="loading">
           <div className="loading__inner">
@@ -261,14 +205,8 @@ export const Buy = () => {
       ) : (
         <>
           <div className="alert">
-            <SlAlert
-              variant={eventType === 'error' ? 'warning' : 'primary'}
-              ref={eventModalRef}
-              className="alert__container"
-            >
-              {eventType === 'error' && <SlIcon slot="icon" name="exclamation-triangle" />}
-              {eventType === 'primary' && <SlIcon slot="icon" name="info-circle" />}
-              {eventType === 'success' && <SlIcon slot="icon" name="check2-circle" />}
+            <SlAlert variant={'primary'} ref={eventModalRef} className="alert__container">
+              <SlIcon slot="icon" name="info-circle" />
               {eventTitle}
             </SlAlert>
           </div>
@@ -334,7 +272,7 @@ export const Buy = () => {
               </div>
             </SlCard>
           </SlCard>
-          <SlButton onClick={enterPresale} disabled={!buyButtonDisabled} variant="primary" className="buy__btn">
+          <SlButton onClick={enterPresale} disabled={buyButtonDisabled} variant="primary" className="buy__btn">
             {submitting ? <Spinner /> : <>{isActive ? 'BUY TEA' : 'Presale Current Round Ended.'}</>}
           </SlButton>
         </>

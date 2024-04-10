@@ -13,28 +13,17 @@ export async function getTokenAllowance(tokenAddress: string, ownerAddress: stri
 }
 
 export async function setTokenApprove(tokenAddress: string, value: string, decimal: string) {
-  try {
-    const provider = new ethers.BrowserProvider((window as any).ethereum);
-    const signer = await provider.getSigner();
-    const contract = new Contract(tokenAddress, ERC20_ABI, signer);
-    const amount = parseUnits(value, decimal);
-    const tx = await contract.approve(PRESALE_CONTRACT_ADDRESS, amount);
-    await tx.wait();
-    return {
-      status: 'SUCCESS',
-      message: 'Transaction Approevd.',
-      txid: tx,
-    };
-  } catch (err: any) {
-    let message = 'Transaction Failed';
-    if (err.code == 'ACTION_REJECTED') {
-      message = 'Transaction Rejected by user';
-    }
-    return {
-      status: 'FAILURE',
-      message,
-    };
-  }
+  const provider = new ethers.BrowserProvider((window as any).ethereum);
+  const signer = await provider.getSigner();
+  const contract = new Contract(tokenAddress, ERC20_ABI, signer);
+  const amount = parseUnits(value, decimal);
+  const tx = await contract.approve(PRESALE_CONTRACT_ADDRESS, amount);
+  await tx.wait();
+  return {
+    status: 'SUCCESS',
+    message: 'Transaction Approevd.',
+    txid: tx,
+  };
 }
 
 export async function enterPresaleUtil(value: string, referral: number, token: string) {
@@ -61,12 +50,12 @@ export async function enterPresaleUtil(value: string, referral: number, token: s
       const decodedError = contract.interface.parseError(e.data);
       return {
         status: 'FAILURE',
-        message: `Transaction failed: ${decodedError?.name}`,
+        message: `Transaction Failed: ${decodedError?.name}`,
       };
     } else {
       return {
         status: 'FAILURE',
-        message: `Transaction failed:`,
+        message: `Transaction Failed:`,
       };
     }
   }
