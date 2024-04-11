@@ -42,7 +42,6 @@ export const Buy = () => {
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [triggerUserBuy, setTriggerUserBuy] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [roundInfo, setRoundInfo] = useState<{
@@ -91,19 +90,15 @@ export const Buy = () => {
     updateValueOfLastTouchedInput();
   }, [updateValueOfLastTouchedInput]);
 
-  useEffect(() => {
-    const updateInfo = async () => {
-      if (account) {
-        const result = await getPresaleRoundSold();
-        setContractInfo(result);
-        const userBalance = await getPresaleUserBalance(account);
-        userTeaPurchased.current = userBalance;
-      }
-    };
-    // only updated after purchase or user referesh (for not getting rate-limited.)
-    updateUserBalance();
-    updateInfo();
-  }, [triggerUserBuy]);
+  const updateInfo = async () => {
+    if (account) {
+      const result = await getPresaleRoundSold();
+      setContractInfo(result);
+      const userBalance = await getPresaleUserBalance(account);
+      userTeaPurchased.current = userBalance;
+      updateUserBalance();
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timer;
@@ -193,7 +188,7 @@ export const Buy = () => {
         Number(window.localStorage.getItem('referral')),
         mappedCoins[selectedCoin].contract
       );
-      setTriggerUserBuy((prev) => !prev);
+      updateInfo();
       if (res.status === 'SUCCESS') {
         setEventTitle('Transaction Approved ✅');
         setTimeout(() => {
