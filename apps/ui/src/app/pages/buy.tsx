@@ -37,8 +37,8 @@ export const Buy = () => {
   const [amount, setAmount] = useState<string>();
   const [amountInTea, setAmountInTea] = useState<string>();
   const [eventTitle, setEventTitle] = useState<string>('');
-  const [eventType, setEventType] = useState<string>('primary');
   const { paymentAssets, account, updateUserBalance } = useMetaMaskContext();
+  const { showModal, setEventInfo } = useEventContext();
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -92,15 +92,17 @@ export const Buy = () => {
   }, [updateValueOfLastTouchedInput]);
 
   useEffect(() => {
-    const getPurchased = async () => {
+    const updateInfo = async () => {
       if (account) {
+        const result = await getPresaleRoundSold();
+        setContractInfo(result);
         const userBalance = await getPresaleUserBalance(account);
         userTeaPurchased.current = userBalance;
       }
     };
     // only updated after purchase or user referesh (for not getting rate-limited.)
     updateUserBalance();
-    getPurchased();
+    updateInfo();
   }, [triggerUserBuy]);
 
   useEffect(() => {
@@ -116,8 +118,8 @@ export const Buy = () => {
       const price = await getPresaleRoundPrice();
       const roundResult = await getPresaleCurrentRoundInfo();
       const result = await getPresaleRoundSold();
-      setRoundInfo(roundResult);
       setContractInfo(result);
+      setRoundInfo(roundResult);
       remainingTea.current = result.roundSize - result.roundSold;
       setTokenPrice(price);
     };
@@ -129,16 +131,12 @@ export const Buy = () => {
       }
     };
     initializeProvider();
-    const initializeProvider = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-      }
-    };
 
     const handleStart = async () => {
       initializeProvider();
       await getInfo();
       await getPurchased();
+      setLoading(false);
 
       interval = setInterval(() => {
         getInfo();
@@ -147,7 +145,6 @@ export const Buy = () => {
       return () => {
         interval && clearInterval(interval);
       };
-      setLoading(false);
     };
     handleStart();
   }, [account]);
@@ -196,9 +193,9 @@ export const Buy = () => {
         Number(window.localStorage.getItem('referral')),
         mappedCoins[selectedCoin].contract
       );
-      if (res.status === 'SUCCSS') {
+      setTriggerUserBuy((prev) => !prev);
+      if (res.status === 'SUCCESS') {
         setEventTitle('Transaction Approved ✅');
-        setTriggerUserBuy((prev) => !prev);
         setTimeout(() => {
           eventModalRef.current?.hide();
         }, 4000);
