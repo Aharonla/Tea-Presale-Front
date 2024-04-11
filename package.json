@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve ui"
+    "start": "nx serve ui",
+    "build": "npx nx build ui"
   },
   "private": true,
   "dependencies": {
@@ -16,6 +17,7 @@
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
     "ethers": "^6.11.1",
+    "js-big-decimal": "^2.0.7",
     "mysql2": "^3.9.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

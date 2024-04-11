@@ -1,15 +1,24 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { SlCard } from '@shoelace-style/shoelace/dist/react';
+import { useEventContext } from '../context/event.context';
 import { getPresaleRoundInfo } from '../utils/presale';
-
-export const Countdown = () => {
+import { getTimeDiffrenece } from '../utils/calculation';
+interface ICountdown {
+  isActive: boolean | null;
+  roundInfo: {
+    currentRound: number;
+    roundEnd: number;
+  };
+  setIsActive: Dispatch<SetStateAction<boolean | null>>;
+}
+export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
   const [secondsToEnd, setSecondsToEnd] = useState<number | null>(null);
-  const [isActive, setIsActive] = useState<boolean | null>(null);
   const [countdownName, setCountdownName] = useState<string | null>(null);
+  const { showModal, setEventInfo } = useEventContext();
+
   useEffect(() => {
     let interval: NodeJS.Timer;
     const getTokenCountdown = async () => {
-      const roundInfo = await getPresaleRoundInfo();
       const currentDate = new Date();
       const endDate = new Date(roundInfo.roundEnd * 1000);
       const secondsLeft = endDate.valueOf() - currentDate.valueOf();
@@ -23,17 +32,29 @@ export const Countdown = () => {
             return prev ? prev - 1 : 0;
           });
         }, 1000);
+      } else {
+        const nextRound = await getPresaleRoundInfo(roundInfo.currentRound + 1);
+        setEventInfo({
+          title: `Presale Round ${roundInfo.currentRound} Round is Over!`,
+          subTitle:
+            nextRound.startTime > 0
+              ? `Next round will start in ${getTimeDiffrenece(nextRound.startTime * 1000)}!`
+              : 'Follow us on our social medias to get latest news.',
+        });
+        showModal();
       }
       setSecondsToEnd(Math.floor(secondsLeft / 1000));
       setIsActive(secondsLeft > 0);
       setCountdownName(`PRESALE ROUND ${roundInfo.currentRound}`);
     };
-    getTokenCountdown();
+    if (roundInfo) {
+      getTokenCountdown();
+    }
 
     return () => {
       interval && clearInterval(interval);
     };
-  }, []);
+  }, [roundInfo]);
 
   const timeLeft = useMemo(
     () => ({
