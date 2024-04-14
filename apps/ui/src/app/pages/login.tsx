@@ -61,14 +61,7 @@ export const Login = () => {
           </SlButton>
         </form>
       )}
-      <SlDialog
-        className="terms"
-        label="Agree to terms"
-        open={dialogOpen}
-        onSlAfterHide={() => {
-          console.log('after hide');
-        }}
-      >
+      <SlDialog className="terms" label="Agree to terms" open={dialogOpen} onSlAfterHide={() => setDialogOpen(false)}>
         <section className="terms__content">
           <div>
             THE UTILITY TOKENS BEING OFFERED OR SOLD BY THE COMPANY HEREUNDER (THE “TOKENS”) HAVE NOT BEEN REGISTERED
