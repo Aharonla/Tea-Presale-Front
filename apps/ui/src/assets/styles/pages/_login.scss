@@ -3,6 +3,23 @@
   padding: 2em 0;
   position: relative;
 
+  .submit {
+    &::part(base) {
+      background-color: $color-brand;
+      border: none;
+      border-radius: 10px;
+      transition: all 100ms ease-in-out 25ms;
+    }
+    &[disabled] {
+      &::part(base) {
+        opacity: 0.8;
+      }
+      &::part(label) {
+        font-weight: 700;
+        color: black;
+      }
+    }
+  }
   form {
     display: flex;
     flex-direction: column;
@@ -39,8 +56,15 @@
       padding-block: 0;
       padding: 1em;
       border-radius: 0.5em;
-      border: 1px solid #ccc;
-      max-height: 350px;
+      max-height: 400px;
+      color: $color-text;
+    }
+
+    &::part(panel) {
+      background-color: $bg-base;
+    }
+    &::part(title) {
+      color: $color-text;
     }
     &::part(close-button) {
       font-size: 0.8em;
@@ -54,10 +78,20 @@
     }
     &__actions {
       display: flex;
-      gap: 0.5em;
       &::part(base) {
         background-color: $color-brand;
-        color: black;
+        border: none;
+        border-radius: 10px;
+        transition: all 100ms ease-in-out 25ms;
+      }
+      &[disabled] {
+        &::part(base) {
+          opacity: 0.8;
+        }
+        &::part(label) {
+          font-weight: 700;
+          color: black;
+        }
       }
     }
   }
