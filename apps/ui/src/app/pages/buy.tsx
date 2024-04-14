@@ -7,8 +7,7 @@ import ethereumIcon from '../../assets/icons/ethereum.svg';
 import { CoinInput } from '../components/coin-input';
 import { useCoin } from '../hooks/useCoin';
 import { TokenRate } from '../components/token-rate';
-import teaToken from '../../assets/icons/tea-token.svg';
-import teaLogo from '../../assets/icons/tea-logo-new.svg';
+import teaLogo from '../../assets/icons/tea-logo.svg';
 import { Countdown } from '../components/countdown';
 import {
   enterPresaleUtil,
@@ -273,7 +272,7 @@ export const Buy = () => {
             </SlCard>
             <SlCard className="card__inner tea">
               <SlSelect size="large" value="tea" className="select-coin" disabled>
-                <img src={teaToken} alt="Tea" slot="prefix" className="coin-icon" />
+                <img src={teaLogo} alt="Tea" slot="prefix" className="coin-icon" />
                 <SlOption value="tea">TEA</SlOption>
               </SlSelect>
               <div className="amount">
