@@ -37,7 +37,7 @@ export const Buy = () => {
   const [amount, setAmount] = useState<string>();
   const [amountInTea, setAmountInTea] = useState<string>();
   const [eventTitle, setEventTitle] = useState<string>('');
-  const { paymentAssets, account } = useMetaMaskContext();
+  const { paymentAssets, account, updateUserBalance } = useMetaMaskContext();
   const { showModal, setEventInfo } = useEventContext();
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const { convertCoin, coinValuation } = useCoin({ tokenPrice });
@@ -57,7 +57,6 @@ export const Buy = () => {
   });
   const remainingTea = useRef(0);
   const userTeaPurchased = useRef(0);
-
   const updateValueOfLastTouchedInput = useCallback(() => {
     if (lastInputTouched.current === 'tea') {
       setAmount(() => convertCoin(amountInTea, false, selectedCoin));
@@ -91,13 +90,31 @@ export const Buy = () => {
     updateValueOfLastTouchedInput();
   }, [updateValueOfLastTouchedInput]);
 
+  const updateInfo = async () => {
+    if (account) {
+      const result = await getPresaleRoundSold();
+      setContractInfo(result);
+      const userBalance = await getPresaleUserBalance(account);
+      userTeaPurchased.current = userBalance;
+      updateUserBalance();
+    }
+  };
+
   useEffect(() => {
+    let interval: NodeJS.Timer;
+
+    const initializeProvider = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+      }
+    };
+
     const getInfo = async () => {
       const price = await getPresaleRoundPrice();
       const roundResult = await getPresaleCurrentRoundInfo();
       const result = await getPresaleRoundSold();
-      setRoundInfo(roundResult);
       setContractInfo(result);
+      setRoundInfo(roundResult);
       remainingTea.current = result.roundSize - result.roundSold;
       setTokenPrice(price);
     };
@@ -108,20 +125,24 @@ export const Buy = () => {
         userTeaPurchased.current = userBalance;
       }
     };
-    const initializeProvider = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-      }
-    };
+    initializeProvider();
 
     const handleStart = async () => {
       initializeProvider();
       await getInfo();
       await getPurchased();
       setLoading(false);
+
+      interval = setInterval(() => {
+        getInfo();
+      }, 60000);
+
+      return () => {
+        interval && clearInterval(interval);
+      };
     };
     handleStart();
-  }, []);
+  }, [account]);
 
   const handleApprove = async () => {
     try {
@@ -167,7 +188,8 @@ export const Buy = () => {
         Number(window.localStorage.getItem('referral')),
         mappedCoins[selectedCoin].contract
       );
-      if (res.status === 'SUCCSS') {
+      updateInfo();
+      if (res.status === 'SUCCESS') {
         setEventTitle('Transaction Approved ✅');
         setTimeout(() => {
           eventModalRef.current?.hide();

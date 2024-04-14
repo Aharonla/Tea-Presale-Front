@@ -18,6 +18,8 @@ export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
 
   useEffect(() => {
     let interval: NodeJS.Timer;
+    let outinterval: NodeJS.Timer;
+
     const getTokenCountdown = async () => {
       const currentDate = new Date();
       const endDate = new Date(roundInfo.roundEnd * 1000);
@@ -51,8 +53,14 @@ export const Countdown = ({ isActive, roundInfo, setIsActive }: ICountdown) => {
       getTokenCountdown();
     }
 
+    outinterval = setInterval(() => {
+      clearInterval(interval);
+      getTokenCountdown();
+    }, 60000);
+
     return () => {
       interval && clearInterval(interval);
+      outinterval && clearInterval(outinterval);
     };
   }, [roundInfo]);
 
