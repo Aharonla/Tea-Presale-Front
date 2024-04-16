@@ -245,7 +245,7 @@ export const Buy = () => {
                 }}
                 className="select-coin"
               >
-                <img className="coin-icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Tether" />
+                <img className="select-coin__icon" slot="prefix" src={mappedCoins[selectedCoin]?.icon} alt="Tether" />
                 {coins
                   .map((key) => mappedCoins[key])
                   .map(({ icon, label, value }) => (
@@ -272,7 +272,7 @@ export const Buy = () => {
             </SlCard>
             <SlCard className="card__inner tea">
               <SlSelect size="large" value="tea" className="select-coin" disabled>
-                <img src={teaLogo} alt="Tea" slot="prefix" className="coin-icon" />
+                <img src={teaLogo} alt="Tea" slot="prefix" className="select-coin__icon" />
                 <SlOption value="tea">TEA</SlOption>
               </SlSelect>
               <div className="amount">
