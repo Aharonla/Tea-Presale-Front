@@ -21,6 +21,7 @@ import { USDC, USDT } from '../utils/constants';
 import Spinner from '../components/spinner';
 import ContractInfo from '../components/contract-info';
 import { useEventContext } from '../context/event.context';
+import bigDecimal from 'js-big-decimal';
 
 const mappedCoins = {
   eth: { icon: ethereumIcon, label: 'ETH', value: 'eth', contract: '' },
@@ -259,8 +260,7 @@ export const Buy = () => {
                 <small className="amount__balance">{formattedBalance}</small>
                 <CoinInput
                   disabled={tokenPrice === 0}
-                  value={amount}
-                  decimals={Number(paymentAssets[selectedCoin]?.decimal) || 18}
+                  value={bigDecimal.round(amount, 4)}
                   onChangeValue={(value) => {
                     lastInputTouched.current = 'coin';
                     setAmount(value);
@@ -282,8 +282,7 @@ export const Buy = () => {
 
                 <CoinInput
                   disabled={tokenPrice === 0}
-                  value={amountInTea}
-                  decimals={9}
+                  value={bigDecimal.round(amountInTea, 4)}
                   onChangeValue={(value) => {
                     lastInputTouched.current = 'tea';
                     setAmount(convertCoin(value, false, selectedCoin));
