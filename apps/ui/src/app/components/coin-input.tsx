@@ -3,17 +3,15 @@ import { ComponentProps } from 'react';
 
 type Props = {
   onChangeValue: (amount: string) => void;
-  decimals: number;
 } & ComponentProps<typeof SlInput>;
-export const CoinInput = ({ value, onChangeValue, decimals, ...props }: Props) => {
-  const formattedValueAsNumber = +Number(value).toFixed(decimals);
+export const CoinInput = ({ value, onChangeValue, ...props }: Props) => {
   return (
     <SlInput
       className="amount__input"
       type="number"
       noSpinButtons
       autocomplete="off"
-      valueAsNumber={formattedValueAsNumber ?? undefined}
+      valueAsNumber={Number(value) ?? undefined}
       placeholder={'0.00'}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
@@ -22,7 +20,7 @@ export const CoinInput = ({ value, onChangeValue, decimals, ...props }: Props) =
       }}
       onSlInput={(e) => {
         const amount = parseFloat((e.target as HTMLInputElement).value);
-        onChangeValue(String(amount));
+        onChangeValue(String(Number.isNaN(amount) ? 0 : amount));
       }}
       inputmode="decimal"
       enterkeyhint="done"

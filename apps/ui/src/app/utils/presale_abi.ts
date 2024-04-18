@@ -73,7 +73,9 @@ export const PRESALE_ABI = [
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundAlreadyExists', type: 'error' },
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundAlreadyStarted', type: 'error' },
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundFinished', type: 'error' },
+  { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundNotSet', type: 'error' },
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundNotStarted', type: 'error' },
+  { inputs: [], name: 'WithdrawFailed', type: 'error' },
   {
     anonymous: false,
     inputs: [{ indexed: true, internalType: 'address', name: 'token', type: 'address' }],
@@ -172,7 +174,7 @@ export const PRESALE_ABI = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
     name: 'addPaymentToken',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -207,13 +209,13 @@ export const PRESALE_ABI = [
   },
   {
     inputs: [
-      { internalType: 'uint256', name: '_amount', type: 'uint256' },
-      { internalType: 'uint8', name: '_referral', type: 'uint8' },
-      { internalType: 'address', name: '_paymentToken', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { internalType: 'uint8', name: 'referral', type: 'uint8' },
+      { internalType: 'address', name: 'tokenAddress', type: 'address' },
     ],
     name: 'buyTokens',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -232,11 +234,11 @@ export const PRESALE_ABI = [
   },
   {
     inputs: [
-      { internalType: 'uint8', name: '_round', type: 'uint8' },
-      { internalType: 'uint256', name: '_startTime', type: 'uint256' },
-      { internalType: 'uint256', name: '_duration', type: 'uint256' },
-      { internalType: 'uint256', name: '_size', type: 'uint256' },
-      { internalType: 'uint256', name: '_price', type: 'uint256' },
+      { internalType: 'uint8', name: 'round', type: 'uint8' },
+      { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'duration', type: 'uint256' },
+      { internalType: 'uint256', name: 'size', type: 'uint256' },
+      { internalType: 'uint256', name: 'price', type: 'uint256' },
     ],
     name: 'forceSetRound',
     outputs: [],
@@ -311,7 +313,7 @@ export const PRESALE_ABI = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
     name: 'removePaymentToken',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -333,11 +335,11 @@ export const PRESALE_ABI = [
   },
   {
     inputs: [
-      { internalType: 'uint8', name: '_round', type: 'uint8' },
-      { internalType: 'uint256', name: '_startTime', type: 'uint256' },
-      { internalType: 'uint256', name: '_duration', type: 'uint256' },
-      { internalType: 'uint256', name: '_size', type: 'uint256' },
-      { internalType: 'uint256', name: '_price', type: 'uint256' },
+      { internalType: 'uint8', name: 'round', type: 'uint8' },
+      { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'duration', type: 'uint256' },
+      { internalType: 'uint256', name: 'size', type: 'uint256' },
+      { internalType: 'uint256', name: 'price', type: 'uint256' },
     ],
     name: 'setRound',
     outputs: [],
