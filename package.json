@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve ui",
-    "build": "npx nx build ui"
+    "build": "nx build ui --prod"
   },
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
     "@nestjs/typeorm": "^10.0.2",
-    "@shoelace-style/shoelace": "^2.14.0",
+    "@shoelace-style/shoelace": "^2.15.0",
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
     "ethers": "^6.11.1",

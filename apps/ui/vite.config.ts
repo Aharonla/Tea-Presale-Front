@@ -17,18 +17,24 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), nxViteTsPaths()],
-
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
 
   build: {
-    outDir: '../../dist/apps/privatesale',
+    outDir: '../../dist',
     reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
+    sourcemap: false, // Disable sourcemaps for production
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.* statements in production
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined, // Disable manual chunking for smaller bundles
+      },
     },
   },
 
