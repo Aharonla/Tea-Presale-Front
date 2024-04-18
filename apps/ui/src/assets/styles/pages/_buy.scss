@@ -129,7 +129,11 @@
       &::part(base) {
         background-color: $color-input;
       }
-
+      &__icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
       &::part(combobox) {
         background-color: $color-input;
         width: 200px;

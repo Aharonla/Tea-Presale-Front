@@ -19,9 +19,7 @@ export const useCoin = ({ tokenPrice }: coinProps) => {
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const conversionRate = coinValuation[selectedCoin]! * tokenRate;
-      const result = toTea ? bigDecimal.multiply(value, conversionRate) : bigDecimal.divide(value, conversionRate);
-      const rounded = bigDecimal.round(result, 4);
-      return rounded;
+      return toTea ? bigDecimal.multiply(value, conversionRate) : bigDecimal.divide(value, conversionRate);
     },
     [coinValuation, tokenRate]
   );
