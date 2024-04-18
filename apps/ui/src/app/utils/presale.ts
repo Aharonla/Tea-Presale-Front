@@ -1,11 +1,12 @@
-import { BrowserProvider, Contract, Eip1193Provider, ethers, formatUnits, parseUnits } from 'ethers';
+import { Contract, ethers, parseUnits } from 'ethers';
 import { ERC20_ABI } from './erc20_abi';
 import { PRESALE_ABI } from './presale_abi';
 import { PRESALE_CONTRACT_ADDRESS, USDC } from './constants';
+import { env } from '../utils/env';
 
 export async function getTokenAllowance(tokenAddress: string, ownerAddress: string, spenderAddress: string) {
   // updated provider with custom url for better testnet experience
-  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
   const usdtErc20Contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
   const allowance = await usdtErc20Contract.allowance(ownerAddress, spenderAddress);
   const numDecimals = await usdtErc20Contract.decimals();
@@ -63,7 +64,7 @@ export async function enterPresaleUtil(value: string, referral: number, token: s
 
 export async function getPresaleCurrentRoundInfo() {
   // updated provider with custom url for better testnet experience
-  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
   const roundEnd = await presaleContract.getRoundEnd();
   const currentRound = await presaleContract.currentRound();
@@ -75,7 +76,7 @@ export async function getPresaleCurrentRoundInfo() {
 
 export async function getPresaleRoundPrice() {
   // updated provider with custom url for better testnet experience
-  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
   const roundPrice = await presaleContract.getPrice();
   const roundPercentageRate = await presaleContract.PERCENTAGE_RATE();
@@ -87,7 +88,7 @@ export async function getPresaleRoundPrice() {
 export async function getPresaleRoundSold() {
   try {
     // updated provider with custom url for better testnet experience
-    const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+    const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
     const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
     const roundSize = await presaleContract.getRoundSize();
     const roundSold = await presaleContract.getRoundSold();
@@ -106,7 +107,7 @@ export async function getPresaleRoundSold() {
 
 export async function getPresaleUserBalance(address: string) {
   // updated provider with custom url for better testnet experience
-  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
   const userBalance = await presaleContract.balanceOf(address);
   const decimals = await presaleContract.decimals();
@@ -115,7 +116,7 @@ export async function getPresaleUserBalance(address: string) {
 
 export async function getPresaleRoundInfo(round: number) {
   // updated provider with custom url for better testnet experience
-  const provider = ethers.getDefaultProvider(import.meta.env.VITE_PUBLIC_SEPOLIA_URL);
+  const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
   const presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, provider);
   const roundInfo = await presaleContract.rounds(round);
   return {
