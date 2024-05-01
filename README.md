@@ -20,7 +20,13 @@ Run `npx nx serve ui` or `npm run start` to start the development server. Happy 
 
 ## Build for production
 
-Before builing you need to set env values to the OS system.
+Before builing you need to set env values to the OS system with the correct values for required for dapp.
+
+on Linux And Mac run below command in terminal :
+`export VARIABLE_NAME=value`
+on windows :
+`set [<variable>=[<string>]]`
+
 Then run `npx nx build ui --prod` or `npm run build` to build the application. The build artifacts are stored in the dist/apps/privatesale directory. ready to be deployed.
 
 ### Running production in local
