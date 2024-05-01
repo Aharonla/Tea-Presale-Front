@@ -60,7 +60,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
         name: 'Tea',
         url: `http${import.meta.env.DEV ? '' : 's'}://${window.location.href.split('/')[2]}`,
       },
-      infuraAPIKey: env.INFURA_API_KEY,
+      infuraAPIKey: env.INFURA_RPC_URL,
       extensionOnly: true,
     });
   }
@@ -146,7 +146,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
 
   async function getFormattedDecimalOfErc20TokenHolder(contractAddress: string, address: string) {
     // updated provider with custom url for better testnet experience
-    const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
+    const provider = ethers.getDefaultProvider(env.INFURA_RPC_URL);
     const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, provider);
     const numDecimals = await usdtErc20Contract.decimals();
 
@@ -155,7 +155,7 @@ export const MetaMaskProvider: FunctionComponent<{ children: ReactNode }> = ({ c
 
   async function getFormattedBalanceOfErc20TokenHolder(contractAddress: string, address: string, numDecimals: number) {
     // updated provider with custom url for better testnet experience
-    const provider = ethers.getDefaultProvider(env.INFURA_API_KEY);
+    const provider = ethers.getDefaultProvider(env.INFURA_RPC_URL);
     const usdtErc20Contract = new ethers.Contract(contractAddress, ERC20_ABI, provider);
 
     const balance = await usdtErc20Contract.balanceOf(address);

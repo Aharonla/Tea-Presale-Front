@@ -10,7 +10,7 @@
 
 create .env.development inside apps/ui directory and add the following:
 
-- VITE_INFURA_API_KEY= Get it from <https://app.infura.io>
+- VITE_INFURA_RPC_URL= Get it from <https://app.infura.io>
 
 ## Development
 
