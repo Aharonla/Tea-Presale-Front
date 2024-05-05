@@ -66,5 +66,5 @@ dist
 .vit
 
 .eslintcache
-apps/ui/.env.*
-.env.*
+apps/ui/.env.development
+apps/ui/.env.production

@@ -8,11 +8,9 @@
 
 ## .env file
 
-create .env.development inside apps/ui directory and add the followings:
+rename .env.development.example to .env.development inside apps/ui directory and add the following:
 
-- VITE_WALLET_CONNECT_PROJECT_ID= Get it from <https://cloud.walletconnect.com/sign-in>
-- VITE_PUBLIC_INFURA_API= Get it from <https://app.infura.io/login>
-- VITE_PUBLIC_SEPOLIA_URL= Get it from <https://app.infura.io/login>
+- VITE_INFURA_RPC_URL= Get it from <https://app.infura.io>
 
 ## Development
 
