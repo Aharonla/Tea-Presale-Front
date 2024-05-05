@@ -20,7 +20,7 @@ Run `npx nx serve ui` or `npm run start` to start the development server. Happy 
 
 ## Build for production
 
-Before builing you need to set env values to the OS system with the correct values for required for dapp.
+Before building you need to set env values to the OS system you can get these values from .env.production.example
 
 on Linux And Mac run below command in terminal :
 `export VARIABLE_NAME=value`
