@@ -1,6 +1,6 @@
-export const USDT = '0x3d0a6583af16776f10CabE85eac457539F8e2979';
-export const USDC = '0x1a111B6Ab998D51ed0354fb70922d967730720D2';
-export const PRESALE_CONTRACT_ADDRESS = '0xbF83202eD252003D7a3B29ab650Ce750BD8154E7';
+export const USDT = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
+export const USDC = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+export const PRESALE_CONTRACT_ADDRESS = '0x8fc37dea525b06dd9f214bf06a4c544fa87c777d';
 export const loginMapping: { [key: string]: number } = {
   DIPSI: 1,
   JELLY: 2,

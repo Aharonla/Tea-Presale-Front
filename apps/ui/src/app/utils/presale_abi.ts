@@ -1,8 +1,17 @@
 export const PRESALE_ABI = [
   {
-    inputs: [{ internalType: 'address[]', name: '_paymentTokens', type: 'address[]' }],
+    inputs: [
+      { internalType: 'address', name: '_owner', type: 'address' },
+      { internalType: 'address[]', name: '_paymentTokens', type: 'address[]' },
+    ],
     stateMutability: 'nonpayable',
     type: 'constructor',
+  },
+  { inputs: [{ internalType: 'address', name: 'target', type: 'address' }], name: 'AddressEmptyCode', type: 'error' },
+  {
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+    name: 'AddressInsufficientBalance',
+    type: 'error',
   },
   {
     inputs: [
@@ -40,6 +49,7 @@ export const PRESALE_ABI = [
   },
   { inputs: [], name: 'EnforcedPause', type: 'error' },
   { inputs: [], name: 'ExpectedPause', type: 'error' },
+  { inputs: [], name: 'FailedInnerCall', type: 'error' },
   {
     inputs: [
       { internalType: 'uint8', name: 'round', type: 'uint8' },
@@ -75,6 +85,11 @@ export const PRESALE_ABI = [
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundFinished', type: 'error' },
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundNotSet', type: 'error' },
   { inputs: [{ internalType: 'uint8', name: 'round', type: 'uint8' }], name: 'RoundNotStarted', type: 'error' },
+  {
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
+    name: 'SafeERC20FailedOperation',
+    type: 'error',
+  },
   { inputs: [], name: 'WithdrawFailed', type: 'error' },
   {
     anonymous: false,
@@ -161,6 +176,7 @@ export const PRESALE_ABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+      { indexed: false, internalType: 'address', name: 'token', type: 'address' },
       { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'Withdraw',
@@ -296,7 +312,7 @@ export const PRESALE_ABI = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'contract ERC20', name: 'token', type: 'address' }],
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
     name: 'paymentTokens',
     outputs: [{ internalType: 'bool', name: 'allowed', type: 'bool' }],
     stateMutability: 'view',
