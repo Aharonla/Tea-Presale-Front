@@ -8,7 +8,7 @@
 
 ## .env file
 
-create .env.development inside apps/ui directory and add the following:
+rename .env.development.example to .env.development inside apps/ui directory and add the following:
 
 - VITE_INFURA_RPC_URL= Get it from <https://app.infura.io>
 
